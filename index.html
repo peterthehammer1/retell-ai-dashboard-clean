@@ -270,7 +270,7 @@
                                           call.call_status === 'failed' ? 'status-failed' : 'status-started';
                         
                         callsDiv.innerHTML += `
-                            <div class="call-card">
+                            <div class="call-card" onclick="viewCallDetails('${call.call_id}')" style="cursor: pointer;">
                                 <div class="call-id">${call.call_id}</div>
                                 <div>
                                     <span class="call-status ${statusClass}">${call.call_status}</span>
