@@ -338,7 +338,7 @@
             color: #706e6b;
         }
 
-        /* Special Sections */
+        /* Enhanced Transcript Section */
         .transcript-section {
             background: white;
             border: 1px solid #d8dde6;
@@ -351,6 +351,9 @@
             padding: 16px 20px;
             border-bottom: 1px solid #d8dde6;
             background: #fafaf9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .transcript-title {
@@ -360,19 +363,129 @@
             margin: 0;
         }
 
-        .transcript-content {
-            background: #f8f9fa;
-            padding: 20px;
-            border: 1px solid #d8dde6;
-            max-height: 400px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
-            font-size: 13px;
-            line-height: 1.6;
-            color: #16325c;
+        .transcript-actions {
+            display: flex;
+            gap: 8px;
         }
 
+        .transcript-content {
+            background: #f8f9fa;
+            padding: 0;
+            border: 1px solid #d8dde6;
+            max-height: 500px;
+            overflow-y: auto;
+            border-radius: 0 0 4px 4px;
+        }
+
+        .transcript-message {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            gap: 12px;
+        }
+
+        .transcript-message:last-child {
+            border-bottom: none;
+        }
+
+        .transcript-message.agent {
+            background: #f8f9fa;
+        }
+
+        .transcript-message.customer {
+            background: white;
+        }
+
+        .speaker-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .speaker-avatar.agent {
+            background: #0070d2;
+        }
+
+        .speaker-avatar.customer {
+            background: #04844b;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .speaker-name {
+            font-weight: 600;
+            color: #16325c;
+            font-size: 14px;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #706e6b;
+        }
+
+        .message-text {
+            color: #2c3e50;
+            font-size: 14px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .transcript-footer {
+            padding: 16px 20px;
+            background: #fafaf9;
+            border-top: 1px solid #d8dde6;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .transcript-stats {
+            font-size: 12px;
+            color: #706e6b;
+        }
+
+        .transcript-btn {
+            padding: 6px 12px;
+            border: 1px solid #d8dde6;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .transcript-btn:hover {
+            background: #f8f9fa;
+        }
+
+        .transcript-btn.primary {
+            background: #0070d2;
+            color: white;
+            border-color: #0070d2;
+        }
+
+        .transcript-btn.primary:hover {
+            background: #005fb2;
+        }
+
+        /* Analysis Section */
         .analysis-section {
             background: white;
             border: 1px solid #d8dde6;
@@ -500,11 +613,14 @@
                 <a href="index.html" class="nav-item">
                     <i>📊</i> Dashboard
                 </a>
-                <a href="#" class="nav-item active">
-                    <i>📞</i> Call Details
+                <a href="analytics-dashboard.html" class="nav-item">
+                    <i>📈</i> Advanced Analytics
                 </a>
                 <a href="#" class="nav-item">
-                    <i>📈</i> Reports
+                    <i>📞</i> Call Logs
+                </a>
+                <a href="reports-dashboard.html" class="nav-item">
+                    <i>📋</i> Reports
                 </a>
             </div>
             
@@ -513,7 +629,7 @@
                 <a href="#" class="nav-item">
                     <i>👥</i> Agents
                 </a>
-                <a href="#" class="nav-item">
+                <a href="settings-dashboard.html" class="nav-item">
                     <i>⚙️</i> Settings
                 </a>
                 <a href="#" class="nav-item">
@@ -715,8 +831,23 @@
                 <div class="transcript-section">
                     <div class="transcript-header">
                         <h3 class="transcript-title">Call Transcript</h3>
+                        <div class="transcript-actions">
+                            <button class="transcript-btn" onclick="copyTranscript()">Copy</button>
+                            <button class="transcript-btn primary" onclick="downloadTranscript()">Download</button>
+                        </div>
                     </div>
-                    <div class="transcript-content">${call.transcript}</div>
+                    <div class="transcript-content" id="transcriptContent">
+                        ${formatTranscript(call.transcript)}
+                    </div>
+                    <div class="transcript-footer">
+                        <div class="transcript-stats" id="transcriptStats">
+                            Loading transcript statistics...
+                        </div>
+                        <div>
+                            <button class="transcript-btn" onclick="searchTranscript()">Search</button>
+                            <button class="transcript-btn" onclick="toggleTimestamps()">Toggle Times</button>
+                        </div>
+                    </div>
                 </div>
                 ` : ''}
 
@@ -763,6 +894,125 @@
             `;
             
             document.getElementById('call-details').innerHTML = callDetailsHTML;
+            
+            // Update transcript stats
+            if (call.transcript) {
+                updateTranscriptStats(call.transcript);
+            }
+        }
+
+        // Format transcript with speaker identification
+        function formatTranscript(transcript) {
+            if (!transcript) return '<div class="transcript-message"><div class="message-text">No transcript available</div></div>';
+            
+            // Split transcript into lines and process
+            const lines = transcript.split('\n').filter(line => line.trim());
+            let html = '';
+            let messageCount = 0;
+            
+            lines.forEach((line, index) => {
+                // Try to identify speaker patterns
+                let speaker = 'customer';
+                let message = line.trim();
+                
+                // Common patterns for AI agent responses
+                if (message.toLowerCase().includes('ai:') || 
+                    message.toLowerCase().includes('agent:') ||
+                    message.toLowerCase().includes('assistant:') ||
+                    message.toLowerCase().startsWith('i can help') ||
+                    message.toLowerCase().startsWith('thank you for calling') ||
+                    message.toLowerCase().startsWith('how may i assist') ||
+                    message.toLowerCase().startsWith('i understand') ||
+                    message.toLowerCase().startsWith('let me help') ||
+                    message.toLowerCase().startsWith('i\'m here to help') ||
+                    message.toLowerCase().startsWith('i\'ll be happy to help')) {
+                    speaker = 'agent';
+                }
+                
+                // Remove speaker prefixes if they exist
+                message = message.replace(/^(ai|agent|assistant|customer|user):\s*/i, '');
+                
+                // Create timestamp (simplified)
+                const timestamp = new Date(Date.now() - (lines.length - index) * 30000).toLocaleTimeString();
+                
+                html += `
+                    <div class="transcript-message ${speaker}">
+                        <div class="speaker-avatar ${speaker}">
+                            ${speaker === 'agent' ? 'AI' : 'C'}
+                        </div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <span class="speaker-name">${speaker === 'agent' ? 'AI Agent' : 'Customer'}</span>
+                                <span class="message-time">${timestamp}</span>
+                            </div>
+                            <div class="message-text">${message}</div>
+                        </div>
+                    </div>
+                `;
+                
+                messageCount++;
+            });
+            
+            return html || '<div class="transcript-message"><div class="message-text">No transcript available</div></div>';
+        }
+
+        // Update transcript statistics
+        function updateTranscriptStats(transcript) {
+            const lines = transcript.split('\n').filter(line => line.trim());
+            const agentMessages = lines.filter(line => 
+                line.toLowerCase().includes('ai:') || 
+                line.toLowerCase().includes('agent:') ||
+                line.toLowerCase().includes('assistant:') ||
+                line.toLowerCase().startsWith('i can help') ||
+                line.toLowerCase().startsWith('thank you for calling') ||
+                line.toLowerCase().startsWith('how may i assist')
+            ).length;
+            
+            const customerMessages = lines.length - agentMessages;
+            const totalWords = transcript.split(/\s+/).length;
+            
+            document.getElementById('transcriptStats').innerHTML = `
+                ${lines.length} messages • ${agentMessages} from Agent • ${customerMessages} from Customer • ${totalWords} words
+            `;
+        }
+
+        // Transcript actions
+        function copyTranscript() {
+            const transcriptText = document.getElementById('transcriptContent').innerText;
+            navigator.clipboard.writeText(transcriptText).then(() => {
+                alert('Transcript copied to clipboard!');
+            });
+        }
+
+        function downloadTranscript() {
+            const transcriptText = document.getElementById('transcriptContent').innerText;
+            const blob = new Blob([transcriptText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `call-transcript-${callId}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function searchTranscript() {
+            const searchTerm = prompt('Enter search term:');
+            if (searchTerm) {
+                const content = document.getElementById('transcriptContent');
+                const text = content.innerHTML;
+                const highlighted = text.replace(
+                    new RegExp(searchTerm, 'gi'),
+                    `<mark style="background: #ffeb3b; padding: 2px 4px; border-radius: 2px;">${searchTerm}</mark>`
+                );
+                content.innerHTML = highlighted;
+            }
+        }
+
+        function toggleTimestamps() {
+            const times = document.querySelectorAll('.message-time');
+            times.forEach(time => {
+                time.style.display = time.style.display === 'none' ? 'inline' : 'none';
+            });
         }
 
         // Call the function after it's defined
