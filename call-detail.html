@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Call Details - Pete's Company Analytics</title>
+    <title>Call Details - AgentFlow Pro</title>
     <style>
         * {
             margin: 0;
@@ -12,126 +12,165 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f8f9fa;
-            color: #2c3e50;
-            line-height: 1.6;
+            font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f3f3f3;
+            color: #181818;
+            line-height: 1.4;
         }
 
-        .dashboard-container {
+        .app-container {
             display: flex;
             min-height: 100vh;
         }
 
-        /* Sidebar */
+        /* Salesforce-style Sidebar */
         .sidebar {
-            width: 280px;
-            background: #2c3e50;
+            width: 260px;
+            background: #16325c;
             color: white;
-            padding: 0;
             position: fixed;
             height: 100vh;
             overflow-y: auto;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.15);
         }
 
         .sidebar-header {
-            padding: 25px 20px;
-            border-bottom: 1px solid #34495e;
-            background: #34495e;
+            padding: 20px 16px;
+            border-bottom: 1px solid #2e5a8a;
+            background: #0e2a47;
         }
 
-        .company-logo {
-            font-size: 1.5rem;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #00a1e0;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 16px;
+        }
+
+        .logo-text {
+            font-size: 18px;
             font-weight: 700;
-            color: #3498db;
-            margin-bottom: 5px;
+            color: white;
         }
 
-        .company-subtitle {
-            font-size: 0.85rem;
-            color: #bdc3c7;
+        .company-name {
+            font-size: 12px;
+            color: #b0c4de;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .sidebar-nav {
-            padding: 20px 0;
+        .nav-section {
+            padding: 16px 0;
+        }
+
+        .nav-title {
+            font-size: 11px;
+            color: #b0c4de;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 16px 8px;
+            font-weight: 600;
         }
 
         .nav-item {
-            display: block;
-            padding: 15px 25px;
-            color: #ecf0f1;
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            color: #b0c4de;
             text-decoration: none;
-            transition: all 0.3s ease;
+            font-size: 14px;
+            transition: all 0.2s ease;
             border-left: 3px solid transparent;
         }
 
-        .nav-item:hover, .nav-item.active {
-            background: #34495e;
-            border-left-color: #3498db;
-            color: #3498db;
+        .nav-item:hover {
+            background: #2e5a8a;
+            color: white;
+        }
+
+        .nav-item.active {
+            background: #2e5a8a;
+            color: white;
+            border-left-color: #00a1e0;
         }
 
         .nav-item i {
-            margin-right: 12px;
             width: 20px;
+            margin-right: 12px;
             text-align: center;
         }
 
-        /* Main Content */
+        /* Main Content Area */
         .main-content {
             flex: 1;
-            margin-left: 280px;
-            padding: 0;
+            margin-left: 260px;
+            background: #f3f3f3;
         }
 
-        /* Top Bar */
-        .top-bar {
+        /* Salesforce-style Header */
+        .header {
             background: white;
-            padding: 15px 30px;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid #d8dde6;
+            padding: 0 24px;
+            height: 60px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
         }
 
         .page-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #2c3e50;
+            font-size: 24px;
+            font-weight: 300;
+            color: #16325c;
         }
 
         .breadcrumb {
-            font-size: 0.9rem;
-            color: #7f8c8d;
+            font-size: 12px;
+            color: #706e6b;
         }
 
         .breadcrumb a {
-            color: #3498db;
+            color: #0070d2;
             text-decoration: none;
         }
 
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
-
-        .top-bar-actions {
+        .header-right {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 16px;
         }
 
         .btn {
-            padding: 10px 20px;
-            border: 1px solid #ddd;
+            padding: 8px 16px;
+            border: 1px solid #d8dde6;
             background: white;
-            border-radius: 6px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
             text-decoration: none;
             display: inline-block;
         }
@@ -141,41 +180,46 @@
         }
 
         .btn-primary {
-            background: #3498db;
+            background: #0070d2;
             color: white;
-            border-color: #3498db;
+            border-color: #0070d2;
         }
 
         .btn-primary:hover {
-            background: #2980b9;
+            background: #005fb2;
         }
 
         /* Dashboard Content */
         .dashboard-content {
-            padding: 30px;
+            padding: 24px;
         }
 
-        /* Call Header */
-        .call-header {
+        /* Call Header Card */
+        .call-header-card {
             background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            border: 1px solid #e9ecef;
-            margin-bottom: 30px;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+
+        .call-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #d8dde6;
+            background: #fafaf9;
         }
 
         .call-id {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 10px;
-            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            font-weight: 600;
+            color: #16325c;
+            margin-bottom: 8px;
+            font-family: 'SF Mono', monospace;
         }
 
         .call-meta {
             display: flex;
-            gap: 30px;
+            gap: 32px;
             align-items: center;
             flex-wrap: wrap;
         }
@@ -187,21 +231,23 @@
         }
 
         .meta-label {
-            color: #7f8c8d;
-            font-size: 0.9rem;
+            color: #706e6b;
+            font-size: 12px;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .meta-value {
-            color: #2c3e50;
-            font-weight: 600;
+            color: #16325c;
+            font-weight: 500;
         }
 
         .status-badge {
             display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -225,32 +271,39 @@
         /* Info Grid */
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
         }
 
         .info-card {
             background: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            border: 1px solid #e9ecef;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.1);
         }
 
-        .info-card h3 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            font-size: 1.2rem;
+        .info-card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #d8dde6;
+            background: #fafaf9;
+        }
+
+        .info-card-title {
+            font-size: 16px;
             font-weight: 600;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e9ecef;
+            color: #16325c;
+            margin: 0;
+        }
+
+        .info-card-body {
+            padding: 20px;
         }
 
         .info-item {
-            margin-bottom: 15px;
-            padding: 10px 0;
-            border-bottom: 1px solid #f1f2f6;
+            margin-bottom: 16px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f3f3f3;
         }
 
         .info-item:last-child {
@@ -260,71 +313,93 @@
 
         .info-label {
             font-weight: 600;
-            color: #7f8c8d;
-            margin-bottom: 5px;
-            font-size: 0.85rem;
+            color: #706e6b;
+            margin-bottom: 4px;
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .info-value {
-            color: #2c3e50;
-            font-size: 0.95rem;
+            color: #16325c;
+            font-size: 14px;
             word-break: break-word;
         }
 
         .phone-number {
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            color: #7f8c8d;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 13px;
+            color: #706e6b;
         }
 
         .timestamp {
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            color: #7f8c8d;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 13px;
+            color: #706e6b;
         }
 
         /* Special Sections */
         .transcript-section {
             background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            border: 1px solid #e9ecef;
-            margin-bottom: 30px;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+
+        .transcript-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #d8dde6;
+            background: #fafaf9;
+        }
+
+        .transcript-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #16325c;
+            margin: 0;
         }
 
         .transcript-content {
             background: #f8f9fa;
-            border-radius: 6px;
             padding: 20px;
-            border: 1px solid #e9ecef;
+            border: 1px solid #d8dde6;
             max-height: 400px;
             overflow-y: auto;
             white-space: pre-wrap;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 13px;
             line-height: 1.6;
-            color: #2c3e50;
+            color: #16325c;
         }
 
         .analysis-section {
             background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            border: 1px solid #e9ecef;
-            margin-bottom: 30px;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+
+        .analysis-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #d8dde6;
+            background: #fafaf9;
+        }
+
+        .analysis-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #16325c;
+            margin: 0;
         }
 
         .json-content {
             background: #2c3e50;
             color: #ecf0f1;
-            border-radius: 6px;
             padding: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 12px;
             overflow-x: auto;
             white-space: pre-wrap;
             max-height: 300px;
@@ -333,38 +408,54 @@
 
         .raw-data-section {
             background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            border: 1px solid #e9ecef;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+        }
+
+        .raw-data-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #d8dde6;
+            background: #fafaf9;
+        }
+
+        .raw-data-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #16325c;
+            margin: 0;
+        }
+
+        .raw-data-body {
+            padding: 20px;
         }
 
         .field-count {
-            background: #3498db;
+            background: #0070d2;
             color: white;
-            padding: 15px 25px;
-            border-radius: 6px;
+            padding: 12px 20px;
+            border-radius: 4px;
             text-align: center;
             margin-bottom: 20px;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 14px;
         }
 
         /* Loading States */
         .loading {
             text-align: center;
             padding: 60px;
-            color: #7f8c8d;
-            font-size: 1.1rem;
+            color: #706e6b;
+            font-size: 14px;
         }
 
         .error {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 20px;
-            border-radius: 6px;
+            background: #fef7f7;
+            color: #c23934;
+            padding: 16px;
+            border-radius: 4px;
             border: 1px solid #f5c6cb;
-            margin: 20px 0;
+            margin: 16px 0;
         }
 
         /* Responsive */
@@ -387,20 +478,25 @@
             .call-meta {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 15px;
+                gap: 16px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <!-- Sidebar -->
+    <div class="app-container">
+        <!-- Salesforce-style Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <div class="company-logo">Pete's Company</div>
-                <div class="company-subtitle">Call Center Analytics</div>
+                <div class="logo">
+                    <div class="logo-icon">AF</div>
+                    <div class="logo-text">AgentFlow Pro</div>
+                </div>
+                <div class="company-name">Pete's Company</div>
             </div>
-            <nav class="sidebar-nav">
+            
+            <div class="nav-section">
+                <div class="nav-title">Analytics</div>
                 <a href="/" class="nav-item">
                     <i>📊</i> Dashboard
                 </a>
@@ -408,31 +504,37 @@
                     <i>📞</i> Call Details
                 </a>
                 <a href="#" class="nav-item">
-                    <i>👥</i> Agents
-                </a>
-                <a href="#" class="nav-item">
                     <i>📈</i> Reports
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Management</div>
+                <a href="#" class="nav-item">
+                    <i>👥</i> Agents
                 </a>
                 <a href="#" class="nav-item">
                     <i>⚙️</i> Settings
                 </a>
                 <a href="#" class="nav-item">
-                    <i>🔗</i> Webhooks
+                    <i>🔗</i> Integrations
                 </a>
-            </nav>
+            </div>
         </div>
 
         <!-- Main Content -->
         <div class="main-content">
-            <!-- Top Bar -->
-            <div class="top-bar">
-                <div>
-                    <div class="breadcrumb">
-                        <a href="/">Dashboard</a> > Call Details
+            <!-- Salesforce-style Header -->
+            <div class="header">
+                <div class="header-left">
+                    <div>
+                        <div class="breadcrumb">
+                            <a href="/">Dashboard</a> > <a href="#">Call Logs</a> > Call Details
+                        </div>
+                        <h1 class="page-title">Call Details</h1>
                     </div>
-                    <h1 class="page-title">Call Details</h1>
                 </div>
-                <div class="top-bar-actions">
+                <div class="header-right">
                     <a href="/" class="btn">← Back to Dashboard</a>
                     <button class="btn btn-primary" onclick="window.print()">Print Report</button>
                 </div>
@@ -491,24 +593,26 @@
             
             const callDetailsHTML = `
                 <!-- Call Header -->
-                <div class="call-header">
-                    <div class="call-id">${call.call_id || 'N/A'}</div>
-                    <div class="call-meta">
-                        <div class="meta-item">
-                            <span class="meta-label">Status:</span>
-                            <span class="status-badge ${statusClass}">${call.call_status || 'Unknown'}</span>
-                        </div>
-                        <div class="meta-item">
-                            <span class="meta-label">Duration:</span>
-                            <span class="meta-value">${call.duration_ms ? Math.round(call.duration_ms/1000) + 's' : 'N/A'}</span>
-                        </div>
-                        <div class="meta-item">
-                            <span class="meta-label">Agent:</span>
-                            <span class="meta-value">${call.agent_id || 'N/A'}</span>
-                        </div>
-                        <div class="meta-item">
-                            <span class="meta-label">Created:</span>
-                            <span class="meta-value timestamp">${call.created_at ? new Date(call.created_at).toLocaleString() : 'N/A'}</span>
+                <div class="call-header-card">
+                    <div class="call-header">
+                        <div class="call-id">${call.call_id || 'N/A'}</div>
+                        <div class="call-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Status:</span>
+                                <span class="status-badge ${statusClass}">${call.call_status || 'Unknown'}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Duration:</span>
+                                <span class="meta-value">${call.duration_ms ? Math.round(call.duration_ms/1000) + 's' : 'N/A'}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Agent:</span>
+                                <span class="meta-value">${call.agent_id || 'N/A'}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Created:</span>
+                                <span class="meta-value timestamp">${call.created_at ? new Date(call.created_at).toLocaleString() : 'N/A'}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -521,92 +625,114 @@
                 <!-- Info Grid -->
                 <div class="info-grid">
                     <div class="info-card">
-                        <h3>📞 Call Information</h3>
-                        <div class="info-item">
-                            <div class="info-label">Call ID</div>
-                            <div class="info-value">${call.call_id || 'N/A'}</div>
+                        <div class="info-card-header">
+                            <h3 class="info-card-title">Call Information</h3>
                         </div>
-                        <div class="info-item">
-                            <div class="info-label">Call Type</div>
-                            <div class="info-value">${call.call_type || 'N/A'}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Status</div>
-                            <div class="info-value">
-                                <span class="status-badge ${statusClass}">${call.call_status || 'Unknown'}</span>
+                        <div class="info-card-body">
+                            <div class="info-item">
+                                <div class="info-label">Call ID</div>
+                                <div class="info-value">${call.call_id || 'N/A'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Call Type</div>
+                                <div class="info-value">${call.call_type || 'N/A'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Status</div>
+                                <div class="info-value">
+                                    <span class="status-badge ${statusClass}">${call.call_status || 'Unknown'}</span>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Direction</div>
+                                <div class="info-value">${call.direction || 'N/A'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Duration (ms)</div>
+                                <div class="info-value">${call.duration_ms ? call.duration_ms.toLocaleString() : 'N/A'}</div>
                             </div>
                         </div>
-                        <div class="info-item">
-                            <div class="info-label">Direction</div>
-                            <div class="info-value">${call.direction || 'N/A'}</div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <h3 class="info-card-title">Phone Numbers</h3>
                         </div>
-                        <div class="info-item">
-                            <div class="info-label">Duration (ms)</div>
-                            <div class="info-value">${call.duration_ms ? call.duration_ms.toLocaleString() : 'N/A'}</div>
+                        <div class="info-card-body">
+                            <div class="info-item">
+                                <div class="info-label">From Number</div>
+                                <div class="info-value phone-number">${call.from_number || 'N/A'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">To Number</div>
+                                <div class="info-value phone-number">${call.to_number || 'N/A'}</div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="info-card">
-                        <h3>📱 Phone Numbers</h3>
-                        <div class="info-item">
-                            <div class="info-label">From Number</div>
-                            <div class="info-value phone-number">${call.from_number || 'N/A'}</div>
+                        <div class="info-card-header">
+                            <h3 class="info-card-title">Agent Information</h3>
                         </div>
-                        <div class="info-item">
-                            <div class="info-label">To Number</div>
-                            <div class="info-value phone-number">${call.to_number || 'N/A'}</div>
-                        </div>
-                    </div>
-
-                    <div class="info-card">
-                        <h3>🤖 Agent Information</h3>
-                        <div class="info-item">
-                            <div class="info-label">Agent ID</div>
-                            <div class="info-value">${call.agent_id || 'N/A'}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Agent Version</div>
-                            <div class="info-value">${call.agent_version || 'N/A'}</div>
+                        <div class="info-card-body">
+                            <div class="info-item">
+                                <div class="info-label">Agent ID</div>
+                                <div class="info-value">${call.agent_id || 'N/A'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Agent Version</div>
+                                <div class="info-value">${call.agent_version || 'N/A'}</div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="info-card">
-                        <h3>⏰ Timestamps</h3>
-                        <div class="info-item">
-                            <div class="info-label">Start Time</div>
-                            <div class="info-value timestamp">${call.start_timestamp ? new Date(parseInt(call.start_timestamp)).toLocaleString() : 'N/A'}</div>
+                        <div class="info-card-header">
+                            <h3 class="info-card-title">Timestamps</h3>
                         </div>
-                        <div class="info-item">
-                            <div class="info-label">End Time</div>
-                            <div class="info-value timestamp">${call.end_timestamp ? new Date(parseInt(call.end_timestamp)).toLocaleString() : 'N/A'}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Created At</div>
-                            <div class="info-value timestamp">${call.created_at ? new Date(call.created_at).toLocaleString() : 'N/A'}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Updated At</div>
-                            <div class="info-value timestamp">${call.updated_at ? new Date(call.updated_at).toLocaleString() : 'N/A'}</div>
+                        <div class="info-card-body">
+                            <div class="info-item">
+                                <div class="info-label">Start Time</div>
+                                <div class="info-value timestamp">${call.start_timestamp ? new Date(parseInt(call.start_timestamp)).toLocaleString() : 'N/A'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">End Time</div>
+                                <div class="info-value timestamp">${call.end_timestamp ? new Date(parseInt(call.end_timestamp)).toLocaleString() : 'N/A'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Created At</div>
+                                <div class="info-value timestamp">${call.created_at ? new Date(call.created_at).toLocaleString() : 'N/A'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Updated At</div>
+                                <div class="info-value timestamp">${call.updated_at ? new Date(call.updated_at).toLocaleString() : 'N/A'}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 ${call.transcript ? `
                 <div class="transcript-section">
-                    <h3>📝 Call Transcript</h3>
+                    <div class="transcript-header">
+                        <h3 class="transcript-title">Call Transcript</h3>
+                    </div>
                     <div class="transcript-content">${call.transcript}</div>
                 </div>
                 ` : ''}
 
                 ${call.recording_url ? `
                 <div class="info-card">
-                    <h3>🎵 Recording</h3>
-                    <div class="info-item">
-                        <div class="info-label">Recording URL</div>
-                        <div class="info-value">
-                            <a href="${call.recording_url}" target="_blank" style="color: #3498db; text-decoration: none;">
-                                ${call.recording_url}
-                            </a>
+                    <div class="info-card-header">
+                        <h3 class="info-card-title">Recording</h3>
+                    </div>
+                    <div class="info-card-body">
+                        <div class="info-item">
+                            <div class="info-label">Recording URL</div>
+                            <div class="info-value">
+                                <a href="${call.recording_url}" target="_blank" style="color: #0070d2; text-decoration: none;">
+                                    ${call.recording_url}
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -614,17 +740,23 @@
 
                 ${call.call_analysis ? `
                 <div class="analysis-section">
-                    <h3>🔍 Call Analysis</h3>
+                    <div class="analysis-header">
+                        <h3 class="analysis-title">Call Analysis</h3>
+                    </div>
                     <div class="json-content">${JSON.stringify(JSON.parse(call.call_analysis), null, 2)}</div>
                 </div>
                 ` : ''}
 
                 <div class="raw-data-section">
-                    <h3>📋 All Data Fields</h3>
-                    <div class="info-item">
-                        <div class="info-label">Raw Data (JSON)</div>
-                        <div class="info-value">
-                            <div class="json-content">${JSON.stringify(call, null, 2)}</div>
+                    <div class="raw-data-header">
+                        <h3 class="raw-data-title">All Data Fields</h3>
+                    </div>
+                    <div class="raw-data-body">
+                        <div class="info-item">
+                            <div class="info-label">Raw Data (JSON)</div>
+                            <div class="info-value">
+                                <div class="json-content">${JSON.stringify(call, null, 2)}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
