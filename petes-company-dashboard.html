@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pete's Company Dashboard - AgentFlow Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            color: #ffffff;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .company-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .company-name {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .status-badge {
+            background: rgba(46, 213, 115, 0.2);
+            color: #2ed573;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .webhook-info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .webhook-url {
+            font-family: 'Courier New', monospace;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            word-break: break-all;
+            margin: 10px 0;
+            color: #667eea;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .calls-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .calls-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .calls-table th {
+            text-align: left;
+            padding: 15px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .calls-table td {
+            padding: 20px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .calls-table tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-ended {
+            background: rgba(46, 213, 115, 0.2);
+            color: #2ed573;
+        }
+
+        .status-started {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .status-failed {
+            background: rgba(255, 71, 87, 0.2);
+            color: #ff4757;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+        }
+
+        .error {
+            background: rgba(255, 71, 87, 0.1);
+            color: #ff4757;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 71, 87, 0.2);
+        }
+
+        .refresh-btn {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid #667eea;
+            color: #667eea;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .refresh-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="company-info">
+                <h1 class="company-name">Pete's Company</h1>
+                <span class="status-badge">🟢 Active</span>
+            </div>
+            <div class="webhook-info">
+                <h3>🔗 Webhook Configuration</h3>
+                <p>Your Retell AI webhook is configured and working:</p>
+                <div class="webhook-url" id="webhookUrl">
+                    https://aicalldata.netlify.app/.netlify/functions/webhook-handler
+                </div>
+                <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; margin-top: 10px;">
+                    This webhook is already configured in your Retell AI dashboard and is actively receiving call data.
+                </p>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalCalls">-</div>
+                <div class="stat-label">Total Calls</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="successRate">-</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avgDuration">-</div>
+                <div class="stat-label">Avg Duration</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="lastCall">-</div>
+                <div class="stat-label">Last Call</div>
+            </div>
+        </div>
+
+        <!-- Recent Calls -->
+        <div class="calls-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 class="section-title">Recent Calls</h2>
+                <button class="refresh-btn" onclick="loadCalls()">🔄 Refresh</button>
+            </div>
+            <div id="callsContent">
+                <div class="loading">Loading calls...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load calls from our existing API
+        async function loadCalls() {
+            try {
+                document.getElementById('callsContent').innerHTML = '<div class="loading">Loading calls...</div>';
+                
+                const response = await fetch('/.netlify/functions/api-calls');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const calls = await response.json();
+                
+                if (calls.length === 0) {
+                    document.getElementById('callsContent').innerHTML = '<div class="loading">No calls found. Make a test call to see data here!</div>';
+                    updateStats(calls);
+                    return;
+                }
+                
+                // Display calls in table
+                let callsHTML = `
+                    <table class="calls-table">
+                        <thead>
+                            <tr>
+                                <th>Call ID</th>
+                                <th>From Number</th>
+                                <th>To Number</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th>Agent</th>
+                                <th>Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                calls.forEach(call => {
+                    const statusClass = call.call_status === 'ended' ? 'status-ended' : 
+                                      call.call_status === 'failed' ? 'status-failed' : 'status-started';
+                    
+                    const duration = call.duration_ms ? Math.round(call.duration_ms/1000) + 's' : 'N/A';
+                    const time = call.created_at ? new Date(call.created_at).toLocaleString() : 'N/A';
+                    
+                    callsHTML += `
+                        <tr>
+                            <td>${call.call_id || 'N/A'}</td>
+                            <td>${call.from_number || 'N/A'}</td>
+                            <td>${call.to_number || 'N/A'}</td>
+                            <td>${duration}</td>
+                            <td><span class="status-badge ${statusClass}">${call.call_status || 'Unknown'}</span></td>
+                            <td>${call.agent_id || 'N/A'}</td>
+                            <td>${time}</td>
+                            <td>
+                                <button class="btn btn-primary" onclick="viewCallDetails('${call.call_id}')">
+                                    View Details
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                callsHTML += '</tbody></table>';
+                document.getElementById('callsContent').innerHTML = callsHTML;
+                
+                // Update stats
+                updateStats(calls);
+                
+            } catch (error) {
+                console.error('Error loading calls:', error);
+                document.getElementById('callsContent').innerHTML = `
+                    <div class="error">
+                        ❌ Error loading calls: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Update statistics
+        function updateStats(calls) {
+            // Total calls
+            document.getElementById('totalCalls').textContent = calls.length;
+            
+            // Success rate
+            const successfulCalls = calls.filter(call => call.call_status === 'ended').length;
+            const successRate = calls.length > 0 ? Math.round((successfulCalls / calls.length) * 100) : 0;
+            document.getElementById('successRate').textContent = successRate + '%';
+            
+            // Average duration
+            const durations = calls.filter(call => call.duration_ms).map(call => call.duration_ms);
+            if (durations.length > 0) {
+                const avgDuration = Math.round(durations.reduce((a, b) => a + b, 0) / durations.length / 1000);
+                document.getElementById('avgDuration').textContent = avgDuration + 's';
+            } else {
+                document.getElementById('avgDuration').textContent = 'N/A';
+            }
+            
+            // Last call time
+            if (calls.length > 0) {
+                const lastCall = calls[0]; // Assuming calls are sorted by created_at desc
+                const lastCallTime = lastCall.created_at ? new Date(lastCall.created_at).toLocaleString() : 'N/A';
+                document.getElementById('lastCall').textContent = lastCallTime;
+            } else {
+                document.getElementById('lastCall').textContent = 'No calls';
+            }
+        }
+
+        // View call details
+        function viewCallDetails(callId) {
+            window.open(`call-detail.html?id=${callId}`, '_blank');
+        }
+
+        // Load calls on page load and refresh every 30 seconds
+        loadCalls();
+        setInterval(loadCalls, 30000);
+    </script>
+</body>
+</html>
