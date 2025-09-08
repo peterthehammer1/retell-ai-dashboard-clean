@@ -1,0 +1,15 @@
+{
+  "name": "retell-ai-dashboard-clean",
+  "version": "1.0.0",
+  "description": "Simple Retell AI Dashboard with Supabase",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'Static site - no build needed'"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.2"
+  },
+  "keywords": ["retell", "ai", "dashboard", "supabase"],
+  "author": "Your Name",
+  "license": "MIT"
+}
