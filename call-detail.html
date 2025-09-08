@@ -10,222 +10,200 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
         }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        
+
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px 40px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .header h1 {
-            font-size: 2rem;
+            color: #2c3e50;
+            font-size: 2.5rem;
             font-weight: 700;
+            margin: 0;
         }
-        
+
         .back-btn {
-            background: rgba(255,255,255,0.2);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border: none;
+            text-decoration: none;
             padding: 12px 24px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1rem;
+            border-radius: 50px;
             font-weight: 600;
             transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
-        
+
         .back-btn:hover {
-            background: rgba(255,255,255,0.3);
             transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
         }
-        
+
         .content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
             padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
-        
-        .call-header {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            border-left: 5px solid #667eea;
+
+        .loading, .error {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
         }
-        
-        .call-id {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 15px;
+
+        .loading {
+            color: #667eea;
         }
-        
-        .call-status {
-            display: inline-block;
-            padding: 8px 20px;
-            border-radius: 25px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            margin-right: 15px;
-        }
-        
-        .status-ended { background: #e8f5e8; color: #2e7d32; }
-        .status-started { background: #e3f2fd; color: #1976d2; }
-        .status-failed { background: #ffebee; color: #c62828; }
-        
-        .call-meta {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .meta-item {
-            background: white;
-            padding: 15px;
+
+        .error {
+            color: #e74c3c;
+            background: #fdf2f2;
             border-radius: 10px;
-            border: 1px solid #e9ecef;
+            border: 2px solid #fecaca;
         }
-        
-        .meta-label {
-            font-weight: bold;
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
-        
-        .meta-value {
-            color: #333;
-            font-size: 1rem;
-        }
-        
-        .section {
-            margin-bottom: 40px;
-        }
-        
-        .section-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e9ecef;
-        }
-        
-        .field-grid {
+
+        .call-info {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            gap: 30px;
+            margin-bottom: 40px;
         }
-        
-        .field-item {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #e9ecef;
+
+        .info-card {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
-        
-        .field-label {
-            font-weight: bold;
-            color: #666;
+
+        .info-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .info-item {
+            margin-bottom: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 4px;
             font-size: 0.9rem;
-            margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        
-        .field-value {
-            color: #333;
+
+        .info-value {
+            color: #2d3748;
             font-size: 1rem;
             word-break: break-word;
         }
-        
-        .field-value.json {
-            background: #f0f0f0;
-            padding: 10px;
-            border-radius: 5px;
-            font-family: monospace;
-            font-size: 0.9rem;
-            white-space: pre-wrap;
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        
-        .field-value.url {
-            color: #1976d2;
-            text-decoration: underline;
+
+        .status-ended {
+            background: #d4edda;
+            color: #155724;
         }
-        
-        .field-value.url:hover {
-            color: #1565c0;
+
+        .status-started {
+            background: #fff3cd;
+            color: #856404;
         }
-        
+
+        .status-failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
         .transcript-section {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 15px;
-            border: 1px solid #e9ecef;
+            margin-top: 30px;
         }
-        
+
         .transcript-content {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            font-family: monospace;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            white-space: pre-wrap;
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #e2e8f0;
             max-height: 400px;
             overflow-y: auto;
-        }
-        
-        .loading {
-            text-align: center;
-            color: #666;
-            font-style: italic;
-            padding: 40px;
-            font-size: 1.1rem;
-        }
-        
-        .error {
-            color: #d32f2f;
-            background: #ffebee;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border-left: 4px solid #d32f2f;
-        }
-        
-        .empty-value {
-            color: #999;
-            font-style: italic;
-        }
-        
-        .timestamp {
-            color: #666;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
             font-size: 0.9rem;
+            line-height: 1.6;
         }
-        
-        .duration {
-            color: #2e7d32;
-            font-weight: bold;
+
+        .analysis-section {
+            margin-top: 30px;
+        }
+
+        .analysis-content {
+            background: #f0f9ff;
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #bae6fd;
+        }
+
+        .json-content {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        .field-count {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+            font-size: 1.1rem;
         }
     </style>
 </head>
@@ -233,9 +211,8 @@
     <div class="container">
         <div class="header">
             <h1>📞 Call Details</h1>
-            <a href="index.html" class="back-btn">← Back to Dashboard</a>
+            <a class="back-btn" href="/">← Back to Dashboard</a>
         </div>
-        
         <div class="content">
             <div id="loading" class="loading">Loading call details...</div>
             <div id="error" class="error" style="display: none;"></div>
@@ -250,15 +227,6 @@
         const urlParams = new URLSearchParams(window.location.search);
         const callId = urlParams.get('id');
         
-        if (!callId) {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('error').style.display = 'block';
-            document.getElementById('error').innerHTML = 'No call ID provided. Please go back to the dashboard and click on a call.';
-        } else {
-            // Load call details if call ID is provided
-        }
-        }
-
         async function loadCallDetails() {
             try {
                 const response = await fetch(`/.netlify/functions/api-calls`);
@@ -291,88 +259,138 @@
             const statusClass = call.call_status === 'ended' ? 'status-ended' : 
                               call.call_status === 'failed' ? 'status-failed' : 'status-started';
             
-            const duration = call.duration_ms ? Math.round(call.duration_ms / 1000) : 0;
-            const durationText = duration > 0 ? `${duration}s` : 'N/A';
+            // Count total fields
+            const totalFields = Object.keys(call).length;
             
-            const startTime = call.start_timestamp ? new Date(parseInt(call.start_timestamp)).toLocaleString() : 'N/A';
-            const endTime = call.end_timestamp ? new Date(parseInt(call.end_timestamp)).toLocaleString() : 'N/A';
-            
-            document.getElementById('call-details').innerHTML = `
-                <div class="call-header">
-                    <div class="call-id">${call.call_id}</div>
-                    <div>
-                        <span class="call-status ${statusClass}">${call.call_status}</span>
-                        <span class="duration">Duration: ${durationText}</span>
+            const callDetailsHTML = `
+                <div class="field-count">
+                    📊 Displaying ${totalFields} data fields from Retell AI
+                </div>
+                
+                <div class="call-info">
+                    <div class="info-card">
+                        <h3>📞 Call Information</h3>
+                        <div class="info-item">
+                            <div class="info-label">Call ID</div>
+                            <div class="info-value">${call.call_id || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Call Type</div>
+                            <div class="info-value">${call.call_type || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Status</div>
+                            <div class="info-value">
+                                <span class="status-badge ${statusClass}">${call.call_status || 'Unknown'}</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Direction</div>
+                            <div class="info-value">${call.direction || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Duration (ms)</div>
+                            <div class="info-value">${call.duration_ms ? call.duration_ms.toLocaleString() : 'N/A'}</div>
+                        </div>
                     </div>
-                    <div class="call-meta">
-                        <div class="meta-item">
-                            <div class="meta-label">From</div>
-                            <div class="meta-value">${call.from_number || 'N/A'}</div>
+
+                    <div class="info-card">
+                        <h3>📱 Phone Numbers</h3>
+                        <div class="info-item">
+                            <div class="info-label">From Number</div>
+                            <div class="info-value">${call.from_number || 'N/A'}</div>
                         </div>
-                        <div class="meta-item">
-                            <div class="meta-label">To</div>
-                            <div class="meta-value">${call.to_number || 'N/A'}</div>
+                        <div class="info-item">
+                            <div class="info-label">To Number</div>
+                            <div class="info-value">${call.to_number || 'N/A'}</div>
                         </div>
-                        <div class="meta-item">
-                            <div class="meta-label">Agent ID</div>
-                            <div class="meta-value">${call.agent_id || 'N/A'}</div>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>🤖 Agent Information</h3>
+                        <div class="info-item">
+                            <div class="info-label">Agent ID</div>
+                            <div class="info-value">${call.agent_id || 'N/A'}</div>
                         </div>
-                        <div class="meta-item">
-                            <div class="meta-label">Call Type</div>
-                            <div class="meta-value">${call.call_type || 'N/A'}</div>
+                        <div class="info-item">
+                            <div class="info-label">Agent Version</div>
+                            <div class="info-value">${call.agent_version || 'N/A'}</div>
                         </div>
-                        <div class="meta-item">
-                            <div class="meta-label">Direction</div>
-                            <div class="meta-value">${call.direction || 'N/A'}</div>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>⏰ Timestamps</h3>
+                        <div class="info-item">
+                            <div class="info-label">Start Time</div>
+                            <div class="info-value">${call.start_timestamp ? new Date(parseInt(call.start_timestamp)).toLocaleString() : 'N/A'}</div>
                         </div>
-                        <div class="meta-item">
-                            <div class="meta-label">Created</div>
-                            <div class="meta-value timestamp">${new Date(call.created_at).toLocaleString()}</div>
+                        <div class="info-item">
+                            <div class="info-label">End Time</div>
+                            <div class="info-value">${call.end_timestamp ? new Date(parseInt(call.end_timestamp)).toLocaleString() : 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Created At</div>
+                            <div class="info-value">${call.created_at ? new Date(call.created_at).toLocaleString() : 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Updated At</div>
+                            <div class="info-value">${call.updated_at ? new Date(call.updated_at).toLocaleString() : 'N/A'}</div>
                         </div>
                     </div>
                 </div>
 
                 ${call.transcript ? `
-                <div class="section">
-                    <div class="section-title">📝 Transcript</div>
-                    <div class="transcript-section">
-                        <div class="transcript-content">${call.transcript}</div>
+                <div class="transcript-section">
+                    <h3>📝 Call Transcript</h3>
+                    <div class="transcript-content">${call.transcript}</div>
+                </div>
+                ` : ''}
+
+                ${call.recording_url ? `
+                <div class="info-card">
+                    <h3>🎵 Recording</h3>
+                    <div class="info-item">
+                        <div class="info-label">Recording URL</div>
+                        <div class="info-value">
+                            <a href="${call.recording_url}" target="_blank" style="color: #667eea; text-decoration: none;">
+                                ${call.recording_url}
+                            </a>
+                        </div>
                     </div>
                 </div>
                 ` : ''}
 
                 ${call.call_analysis ? `
-                <div class="section">
-                    <div class="section-title">🔍 Call Analysis</div>
-                    <div class="field-grid">
-                        ${Object.entries(JSON.parse(call.call_analysis)).map(([key, value]) => `
-                            <div class="field-item">
-                                <div class="field-label">${key.replace(/_/g, ' ').toUpperCase()}</div>
-                                <div class="field-value ${typeof value === 'object' ? 'json' : ''}">${typeof value === 'object' ? JSON.stringify(value, null, 2) : (value || 'N/A')}</div>
-                            </div>
-                        `).join('')}
+                <div class="analysis-section">
+                    <h3>🔍 Call Analysis</h3>
+                    <div class="analysis-content">
+                        <div class="json-content">${JSON.stringify(JSON.parse(call.call_analysis), null, 2)}</div>
                     </div>
                 </div>
                 ` : ''}
 
-                <div class="section">
-                    <div class="section-title">📊 All Call Data (${Object.keys(call).length} fields)</div>
-                    <div class="field-grid">
-                        ${Object.entries(call)
-                            .filter(([key, value]) => !['transcript', 'call_analysis', 'call_id', 'call_status', 'from_number', 'to_number', 'agent_id', 'call_type', 'direction', 'created_at', 'duration_ms', 'start_timestamp', 'end_timestamp'].includes(key))
-                            .map(([key, value]) => `
-                                <div class="field-item">
-                                    <div class="field-label">${key.replace(/_/g, ' ').toUpperCase()}</div>
-                                    <div class="field-value ${typeof value === 'object' ? 'json' : ''} ${key.includes('url') ? 'url' : ''}">
-                                        ${value ? (typeof value === 'object' ? JSON.stringify(value, null, 2) : value) : '<span class="empty-value">N/A</span>'}
-                                    </div>
-                                </div>
-                            `).join('')}
+                <div class="info-card">
+                    <h3>📋 All Data Fields</h3>
+                    <div class="info-item">
+                        <div class="info-label">Raw Data (JSON)</div>
+                        <div class="info-value">
+                            <div class="json-content">${JSON.stringify(call, null, 2)}</div>
+                        </div>
                     </div>
                 </div>
             `;
+            
+            document.getElementById('call-details').innerHTML = callDetailsHTML;
         }
 
+        // Call the function after it's defined
+        if (!callId) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('error').innerHTML = 'No call ID provided. Please go back to the dashboard and click on a call.';
+        } else {
+            loadCallDetails();
+        }
     </script>
 </body>
 </html>
