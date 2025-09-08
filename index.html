@@ -306,6 +306,11 @@
             }
         }
 
+        // Function to view call details
+        function viewCallDetails(callId) {
+            window.location.href = `call-detail.html?id=${callId}`;
+        }
+
         // Load calls on page load
         loadCalls();
 
