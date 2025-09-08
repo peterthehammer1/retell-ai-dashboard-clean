@@ -254,7 +254,9 @@
             document.getElementById('loading').style.display = 'none';
             document.getElementById('error').style.display = 'block';
             document.getElementById('error').innerHTML = 'No call ID provided. Please go back to the dashboard and click on a call.';
-            return;
+        } else {
+            // Load call details if call ID is provided
+        }
         }
 
         async function loadCallDetails() {
@@ -371,8 +373,6 @@
             `;
         }
 
-        // Load call details when page loads
-        loadCallDetails();
     </script>
 </body>
 </html>
