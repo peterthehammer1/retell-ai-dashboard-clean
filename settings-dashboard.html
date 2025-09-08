@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings & Customization - AgentFlow Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f3f3f3;
+            color: #181818;
+            line-height: 1.4;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Salesforce-style Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #16325c;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+        }
+
+        .sidebar-header {
+            padding: 20px 16px;
+            border-bottom: 1px solid #2e5a8a;
+            background: #0e2a47;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #00a1e0;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 16px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .company-name {
+            font-size: 12px;
+            color: #b0c4de;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-section {
+            padding: 16px 0;
+        }
+
+        .nav-title {
+            font-size: 11px;
+            color: #b0c4de;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 16px 8px;
+            font-weight: 600;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            color: #b0c4de;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: #2e5a8a;
+            color: white;
+        }
+
+        .nav-item.active {
+            background: #2e5a8a;
+            color: white;
+            border-left-color: #00a1e0;
+        }
+
+        .nav-item i {
+            width: 20px;
+            margin-right: 12px;
+            text-align: center;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            background: #f3f3f3;
+        }
+
+        /* Salesforce-style Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid #d8dde6;
+            padding: 0 24px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 300;
+            color: #16325c;
+        }
+
+        .breadcrumb {
+            font-size: 12px;
+            color: #706e6b;
+        }
+
+        .breadcrumb a {
+            color: #0070d2;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid #d8dde6;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #f8f9fa;
+        }
+
+        .btn-primary {
+            background: #0070d2;
+            color: white;
+            border-color: #0070d2;
+        }
+
+        .btn-primary:hover {
+            background: #005fb2;
+        }
+
+        .btn-success {
+            background: #04844b;
+            color: white;
+            border-color: #04844b;
+        }
+
+        .btn-success:hover {
+            background: #036b3a;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 24px;
+        }
+
+        /* Settings Tabs */
+        .settings-tabs {
+            display: flex;
+            background: white;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 16px 20px;
+            background: white;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #706e6b;
+            transition: all 0.2s ease;
+            border-right: 1px solid #d8dde6;
+        }
+
+        .tab:last-child {
+            border-right: none;
+        }
+
+        .tab:hover {
+            background: #f8f9fa;
+        }
+
+        .tab.active {
+            background: #0070d2;
+            color: white;
+        }
+
+        /* Settings Content */
+        .settings-content {
+            display: none;
+        }
+
+        .settings-content.active {
+            display: block;
+        }
+
+        /* Salesforce-style Cards */
+        .card {
+            background: white;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #d8dde6;
+            background: #fafaf9;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #16325c;
+            margin: 0;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: #706e6b;
+            margin-top: 4px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #16325c;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #0070d2;
+            box-shadow: 0 0 0 2px rgba(0, 112, 210, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-description {
+            font-size: 12px;
+            color: #706e6b;
+            margin-top: 4px;
+        }
+
+        /* Checkbox and Radio Groups */
+        .checkbox-group, .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .checkbox-item, .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"], .radio-item input[type="radio"] {
+            margin: 0;
+        }
+
+        .checkbox-item label, .radio-item label {
+            font-size: 14px;
+            color: #16325c;
+            cursor: pointer;
+        }
+
+        /* Color Picker */
+        .color-picker {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .color-option {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: #0070d2;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #0070d2;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Preview Section */
+        .preview-section {
+            background: #f8f9fa;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .preview-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #16325c;
+            margin-bottom: 12px;
+        }
+
+        .preview-dashboard {
+            background: white;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            padding: 16px;
+            min-height: 200px;
+        }
+
+        /* Save Actions */
+        .save-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #d8dde6;
+        }
+
+        /* Loading States */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #706e6b;
+            font-size: 14px;
+        }
+
+        .error {
+            background: #fef7f7;
+            color: #c23934;
+            padding: 16px;
+            border-radius: 4px;
+            border: 1px solid #f5c6cb;
+            margin: 16px 0;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 16px;
+            border-radius: 4px;
+            border: 1px solid #c3e6cb;
+            margin: 16px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .settings-tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Salesforce-style Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">AF</div>
+                    <div class="logo-text">AgentFlow Pro</div>
+                </div>
+                <div class="company-name">Pete's Company</div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Analytics</div>
+                <a href="/" class="nav-item">
+                    <i>📊</i> Dashboard
+                </a>
+                <a href="analytics-dashboard.html" class="nav-item">
+                    <i>📈</i> Advanced Analytics
+                </a>
+                <a href="#" class="nav-item">
+                    <i>📞</i> Call Logs
+                </a>
+                <a href="reports-dashboard.html" class="nav-item">
+                    <i>📋</i> Reports
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Management</div>
+                <a href="#" class="nav-item">
+                    <i>��</i> Agents
+                </a>
+                <a href="#" class="nav-item active">
+                    <i>⚙️</i> Settings
+                </a>
+                <a href="#" class="nav-item">
+                    <i>🔗</i> Integrations
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Salesforce-style Header -->
+            <div class="header">
+                <div class="header-left">
+                    <div>
+                        <div class="breadcrumb">
+                            <a href="/">Home</a> > <a href="#">Management</a> > Settings
+                        </div>
+                        <h1 class="page-title">Settings & Customization</h1>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <a href="/" class="btn">← Back to Dashboard</a>
+                    <button class="btn btn-success" onclick="saveSettings()">Save Changes</button>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Settings Tabs -->
+                <div class="settings-tabs">
+                    <button class="tab active" onclick="showTab('dashboard')">Dashboard</button>
+                    <button class="tab" onclick="showTab('notifications')">Notifications</button>
+                    <button class="tab" onclick="showTab('integrations')">Integrations</button>
+                    <button class="tab" onclick="showTab('security')">Security</button>
+                    <button class="tab" onclick="showTab('billing')">Billing</button>
+                </div>
+
+                <!-- Dashboard Settings -->
+                <div id="dashboard-settings" class="settings-content active">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Dashboard Appearance</h3>
+                            <div class="card-subtitle">Customize the look and feel of your dashboard</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Company Name</label>
+                                    <input type="text" class="form-control" id="companyName" value="Pete's Company">
+                                    <div class="form-description">This will appear in the sidebar and reports</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Dashboard Theme</label>
+                                    <select class="form-control" id="dashboardTheme">
+                                        <option value="light">Light Theme</option>
+                                        <option value="dark">Dark Theme</option>
+                                        <option value="auto">Auto (System)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Primary Color</label>
+                                <div class="color-picker">
+                                    <div class="color-option selected" style="background: #0070d2;" onclick="selectColor('#0070d2')"></div>
+                                    <div class="color-option" style="background: #04844b;" onclick="selectColor('#04844b')"></div>
+                                    <div class="color-option" style="background: #c23934;" onclick="selectColor('#c23934')"></div>
+                                    <div class="color-option" style="background: #ffc107;" onclick="selectColor('#ffc107')"></div>
+                                    <div class="color-option" style="background: #6f42c1;" onclick="selectColor('#6f42c1')"></div>
+                                    <div class="color-option" style="background: #20c997;" onclick="selectColor('#20c997')"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Default Time Range</label>
+                                <select class="form-control" id="defaultTimeRange">
+                                    <option value="7d">Last 7 Days</option>
+                                    <option value="30d" selected>Last 30 Days</option>
+                                    <option value="90d">Last 90 Days</option>
+                                    <option value="1y">Last Year</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Dashboard Layout</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="layout-compact" name="layout" value="compact">
+                                        <label for="layout-compact">Compact (More data, less spacing)</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="layout-comfortable" name="layout" value="comfortable" checked>
+                                        <label for="layout-comfortable">Comfortable (Balanced spacing)</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="layout-spacious" name="layout" value="spacious">
+                                        <label for="layout-spacious">Spacious (More white space)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Data Display Preferences</h3>
+                            <div class="card-subtitle">Choose which metrics to display on your dashboard</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">KPI Cards</label>
+                                <div class="checkbox-group">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="kpi-total-calls" checked>
+                                        <label for="kpi-total-calls">Total Calls</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="kpi-success-rate" checked>
+                                        <label for="kpi-success-rate">Success Rate</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="kpi-avg-duration" checked>
+                                        <label for="kpi-avg-duration">Average Duration</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="kpi-active-agents" checked>
+                                        <label for="kpi-active-agents">Active Agents</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="kpi-peak-hour">
+                                        <label for="kpi-peak-hour">Peak Hour</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="kpi-call-cost">
+                                        <label for="kpi-call-cost">Call Cost</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Charts & Visualizations</label>
+                                <div class="checkbox-group">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="chart-volume-trend" checked>
+                                        <label for="chart-volume-trend">Call Volume Trend</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="chart-status-distribution" checked>
+                                        <label for="chart-status-distribution">Status Distribution</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="chart-hourly-distribution" checked>
+                                        <label for="chart-hourly-distribution">Hourly Distribution</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="chart-agent-performance">
+                                        <label for="chart-agent-performance">Agent Performance</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="preview-section">
+                        <div class="preview-title">Preview</div>
+                        <div class="preview-dashboard" id="dashboardPreview">
+                            <div style="text-align: center; color: #706e6b; padding: 40px;">
+                                Dashboard preview will appear here
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Settings -->
+                <div id="notifications-settings" class="settings-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Email Notifications</h3>
+                            <div class="card-subtitle">Configure when and how you receive notifications</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="emailAddress" value="pete@petescompany.com">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Notification Frequency</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="freq-realtime" name="frequency" value="realtime">
+                                        <label for="freq-realtime">Real-time (Immediate)</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="freq-hourly" name="frequency" value="hourly" checked>
+                                        <label for="freq-hourly">Hourly Digest</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="freq-daily" name="frequency" value="daily">
+                                        <label for="freq-daily">Daily Summary</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Notification Types</label>
+                                <div class="checkbox-group">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="notif-call-failed" checked>
+                                        <label for="notif-call-failed">Call Failures</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="notif-high-volume" checked>
+                                        <label for="notif-high-volume">High Call Volume</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="notif-system-alerts" checked>
+                                        <label for="notif-system-alerts">System Alerts</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="notif-weekly-reports">
+                                        <label for="notif-weekly-reports">Weekly Reports</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Integrations Settings -->
+                <div id="integrations-settings" class="settings-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Webhook Configuration</h3>
+                            <div class="card-subtitle">Manage your Retell AI webhook integration</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">Webhook URL</label>
+                                <input type="text" class="form-control" id="webhookUrl" value="https://aicalldata.netlify.app/.netlify/functions/webhook-handler" readonly>
+                                <div class="form-description">This URL is configured in your Retell AI dashboard</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Webhook Status</label>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #04844b;"></div>
+                                    <span style="color: #04844b; font-weight: 600;">Active & Receiving Data</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Data Processing</label>
+                                <div class="checkbox-group">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="process-transcripts" checked>
+                                        <label for="process-transcripts">Process Call Transcripts</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="process-analysis" checked>
+                                        <label for="process-analysis">Process Call Analysis</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="process-recordings" checked>
+                                        <label for="process-recordings">Process Recording URLs</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Settings -->
+                <div id="security-settings" class="settings-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Account Security</h3>
+                            <div class="card-subtitle">Manage your account security settings</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">Current Password</label>
+                                <input type="password" class="form-control" id="currentPassword">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">New Password</label>
+                                <input type="password" class="form-control" id="newPassword">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Confirm New Password</label>
+                                <input type="password" class="form-control" id="confirmPassword">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Two-Factor Authentication</label>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="twoFactorEnabled">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                    <span>Enable 2FA for enhanced security</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Billing Settings -->
+                <div id="billing-settings" class="settings-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Billing Information</h3>
+                            <div class="card-subtitle">Manage your subscription and payment methods</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Current Plan</label>
+                                    <input type="text" class="form-control" value="Professional Plan - $49/month" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Next Billing Date</label>
+                                    <input type="text" class="form-control" value="December 8, 2024" readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Payment Method</label>
+                                <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #f8f9fa; border: 1px solid #d8dde6; border-radius: 4px;">
+                                    <span>💳</span>
+                                    <span>**** **** **** 1234</span>
+                                    <button class="btn btn-small">Update</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Billing History</label>
+                                <button class="btn">View Billing History</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save Actions -->
+                <div class="save-actions">
+                    <button class="btn btn-success" onclick="saveSettings()">Save All Changes</button>
+                    <button class="btn" onclick="resetSettings()">Reset to Defaults</button>
+                    <button class="btn" onclick="previewChanges()">Preview Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all content
+            document.querySelectorAll('.settings-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected content
+            document.getElementById(tabName + '-settings').classList.add('active');
+            
+            // Add active to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Color selection
+        function selectColor(color) {
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            updatePreview();
+        }
+
+        // Update preview
+        function updatePreview() {
+            const preview = document.getElementById('dashboardPreview');
+            const companyName = document.getElementById('companyName').value;
+            const selectedColor = document.querySelector('.color-option.selected').style.backgroundColor;
+            
+            preview.innerHTML = `
+                <div style="padding: 16px; border: 1px solid #d8dde6; border-radius: 4px; background: white;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                        <div style="width: 24px; height: 24px; background: ${selectedColor}; border-radius: 4px;"></div>
+                        <span style="font-weight: 600; color: #16325c;">${companyName}</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                        <div style="padding: 12px; background: #f8f9fa; border-radius: 4px; text-align: center;">
+                            <div style="font-size: 20px; font-weight: 600; color: #16325c;">10</div>
+                            <div style="font-size: 12px; color: #706e6b;">Total Calls</div>
+                        </div>
+                        <div style="padding: 12px; background: #f8f9fa; border-radius: 4px; text-align: center;">
+                            <div style="font-size: 20px; font-weight: 600; color: #16325c;">90%</div>
+                            <div style="font-size: 12px; color: #706e6b;">Success Rate</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Save settings
+        function saveSettings() {
+            // Show loading
+            const saveBtn = event.target;
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = 'Saving...';
+            saveBtn.disabled = true;
+
+            // Simulate save
+            setTimeout(() => {
+                saveBtn.textContent = originalText;
+                saveBtn.disabled = false;
+                
+                // Show success message
+                const successDiv = document.createElement('div');
+                successDiv.className = 'success';
+                successDiv.textContent = 'Settings saved successfully!';
+                document.querySelector('.dashboard-content').insertBefore(successDiv, document.querySelector('.settings-tabs'));
+                
+                // Remove success message after 3 seconds
+                setTimeout(() => {
+                    successDiv.remove();
+                }, 3000);
+            }, 1500);
+        }
+
+        // Reset settings
+        function resetSettings() {
+            if (confirm('Are you sure you want to reset all settings to defaults? This cannot be undone.')) {
+                // Reset form values
+                document.getElementById('companyName').value = 'Pete\'s Company';
+                document.getElementById('dashboardTheme').value = 'light';
+                document.getElementById('defaultTimeRange').value = '30d';
+                
+                // Reset checkboxes
+                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                
+                // Reset radio buttons
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.checked = false;
+                });
+                
+                // Set default selections
+                document.getElementById('layout-comfortable').checked = true;
+                document.getElementById('freq-hourly').checked = true;
+                
+                updatePreview();
+                alert('Settings reset to defaults');
+            }
+        }
+
+        // Preview changes
+        function previewChanges() {
+            updatePreview();
+            alert('Preview updated! Check the preview section below.');
+        }
+
+        // Initialize preview
+        updatePreview();
+    </script>
+</body>
+</html>

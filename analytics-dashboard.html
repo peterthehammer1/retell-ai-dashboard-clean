@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Analytics - AgentFlow Pro</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f3f3f3;
+            color: #181818;
+            line-height: 1.4;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Salesforce-style Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #16325c;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+        }
+
+        .sidebar-header {
+            padding: 20px 16px;
+            border-bottom: 1px solid #2e5a8a;
+            background: #0e2a47;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #00a1e0;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 16px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .company-name {
+            font-size: 12px;
+            color: #b0c4de;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-section {
+            padding: 16px 0;
+        }
+
+        .nav-title {
+            font-size: 11px;
+            color: #b0c4de;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 16px 8px;
+            font-weight: 600;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            color: #b0c4de;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: #2e5a8a;
+            color: white;
+        }
+
+        .nav-item.active {
+            background: #2e5a8a;
+            color: white;
+            border-left-color: #00a1e0;
+        }
+
+        .nav-item i {
+            width: 20px;
+            margin-right: 12px;
+            text-align: center;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            background: #f3f3f3;
+        }
+
+        /* Salesforce-style Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid #d8dde6;
+            padding: 0 24px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 300;
+            color: #16325c;
+        }
+
+        .breadcrumb {
+            font-size: 12px;
+            color: #706e6b;
+        }
+
+        .breadcrumb a {
+            color: #0070d2;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid #d8dde6;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #f8f9fa;
+        }
+
+        .btn-primary {
+            background: #0070d2;
+            color: white;
+            border-color: #0070d2;
+        }
+
+        .btn-primary:hover {
+            background: #005fb2;
+        }
+
+        .btn-success {
+            background: #04844b;
+            color: white;
+            border-color: #04844b;
+        }
+
+        .btn-success:hover {
+            background: #036b3a;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 24px;
+        }
+
+        /* Analytics Grid */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .analytics-main {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .analytics-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Salesforce-style Cards */
+        .card {
+            background: white;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #d8dde6;
+            background: #fafaf9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #16325c;
+            margin: 0;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: #706e6b;
+            margin-top: 4px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+
+        .chart-container.large {
+            height: 400px;
+        }
+
+        .chart-container.small {
+            height: 200px;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: white;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            padding: 16px;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .kpi-title {
+            font-size: 11px;
+            color: #706e6b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .kpi-icon {
+            width: 28px;
+            height: 28px;
+            background: #f3f3f3;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00a1e0;
+            font-size: 14px;
+        }
+
+        .kpi-value {
+            font-size: 24px;
+            font-weight: 300;
+            color: #16325c;
+            margin-bottom: 6px;
+            line-height: 1;
+        }
+
+        .kpi-change {
+            display: flex;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .kpi-change.positive {
+            color: #04844b;
+        }
+
+        .kpi-change.negative {
+            color: #c23934;
+        }
+
+        .kpi-change i {
+            margin-right: 4px;
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .data-table th {
+            background: #fafaf9;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #16325c;
+            border-bottom: 2px solid #d8dde6;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f3f3f3;
+            color: #181818;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-ended {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-started {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Loading States */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #706e6b;
+            font-size: 14px;
+        }
+
+        .error {
+            background: #fef7f7;
+            color: #c23934;
+            padding: 16px;
+            border-radius: 4px;
+            border: 1px solid #f5c6cb;
+            margin: 16px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Chart Legends */
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #706e6b;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        /* Time Range Selector */
+        .time-range {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .time-btn {
+            padding: 6px 12px;
+            border: 1px solid #d8dde6;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .time-btn.active {
+            background: #0070d2;
+            color: white;
+            border-color: #0070d2;
+        }
+
+        .time-btn:hover {
+            background: #f8f9fa;
+        }
+
+        .time-btn.active:hover {
+            background: #005fb2;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Salesforce-style Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">AF</div>
+                    <div class="logo-text">AgentFlow Pro</div>
+                </div>
+                <div class="company-name">Pete's Company</div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Analytics</div>
+                <a href="/" class="nav-item">
+                    <i>📊</i> Dashboard
+                </a>
+                <a href="#" class="nav-item active">
+                    <i>📈</i> Advanced Analytics
+                </a>
+                <a href="#" class="nav-item">
+                    <i>📞</i> Call Logs
+                </a>
+                <a href="#" class="nav-item">
+                    <i>📋</i> Reports
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Management</div>
+                <a href="#" class="nav-item">
+                    <i>👥</i> Agents
+                </a>
+                <a href="#" class="nav-item">
+                    <i>⚙️</i> Settings
+                </a>
+                <a href="#" class="nav-item">
+                    <i>🔗</i> Integrations
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Salesforce-style Header -->
+            <div class="header">
+                <div class="header-left">
+                    <div>
+                        <div class="breadcrumb">
+                            <a href="/">Home</a> > <a href="#">Analytics</a> > Advanced Analytics
+                        </div>
+                        <h1 class="page-title">Advanced Analytics</h1>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <a href="/" class="btn">← Back to Dashboard</a>
+                    <button class="btn btn-success" onclick="exportReport()">Export Report</button>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Time Range Selector -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="time-range">
+                            <button class="time-btn active" onclick="setTimeRange('7d')">7 Days</button>
+                            <button class="time-btn" onclick="setTimeRange('30d')">30 Days</button>
+                            <button class="time-btn" onclick="setTimeRange('90d')">90 Days</button>
+                            <button class="time-btn" onclick="setTimeRange('1y')">1 Year</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPI Overview -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-title">Total Calls</div>
+                            <div class="kpi-icon">📞</div>
+                        </div>
+                        <div class="kpi-value" id="totalCalls">-</div>
+                        <div class="kpi-change positive">
+                            <i>↗</i> +12% vs last period
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-title">Success Rate</div>
+                            <div class="kpi-icon">✅</div>
+                        </div>
+                        <div class="kpi-value" id="successRate">-</div>
+                        <div class="kpi-change positive">
+                            <i>↗</i> +2.3% vs last period
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-title">Avg Duration</div>
+                            <div class="kpi-icon">⏱️</div>
+                        </div>
+                        <div class="kpi-value" id="avgDuration">-</div>
+                        <div class="kpi-change negative">
+                            <i>↘</i> -5.2% vs last period
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-title">Peak Hour</div>
+                            <div class="kpi-icon">🕐</div>
+                        </div>
+                        <div class="kpi-value" id="peakHour">-</div>
+                        <div class="kpi-change positive">
+                            <i>↗</i> Most active time
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Analytics Grid -->
+                <div class="analytics-grid">
+                    <div class="analytics-main">
+                        <!-- Call Volume Trend -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <h3 class="card-title">Call Volume Trend</h3>
+                                    <div class="card-subtitle">Daily call volume over selected period</div>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="btn" onclick="refreshChart('volume')">Refresh</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container large">
+                                    <canvas id="volumeChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Call Status Distribution -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <h3 class="card-title">Call Status Distribution</h3>
+                                    <div class="card-subtitle">Breakdown by call outcome</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="statusChart"></canvas>
+                                </div>
+                                <div class="chart-legend">
+                                    <div class="legend-item">
+                                        <div class="legend-color" style="background: #04844b;"></div>
+                                        <span>Ended</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-color" style="background: #ffc107;"></div>
+                                        <span>Started</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-color" style="background: #c23934;"></div>
+                                        <span>Failed</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analytics-sidebar">
+                        <!-- Hourly Distribution -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Hourly Distribution</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container small">
+                                    <canvas id="hourlyChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Top Agents -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Agent Performance</h3>
+                            </div>
+                            <div class="card-body">
+                                <div id="agentPerformance">
+                                    <div class="loading">Loading agent data...</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Recent Activity</h3>
+                            </div>
+                            <div class="card-body">
+                                <div id="recentActivity">
+                                    <div class="loading">Loading recent activity...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Analytics Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">Detailed Call Analytics</h3>
+                            <div class="card-subtitle">Comprehensive call data analysis</div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn" onclick="exportData()">Export Data</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="analyticsTable">
+                            <div class="loading">Loading analytics data...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTimeRange = '7d';
+        let volumeChart, statusChart, hourlyChart;
+
+        // Load analytics data
+        async function loadAnalytics() {
+            try {
+                const response = await fetch('/.netlify/functions/api-calls');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const calls = await response.json();
+                
+                if (calls.length === 0) {
+                    showNoData();
+                    return;
+                }
+                
+                updateKPIs(calls);
+                createCharts(calls);
+                updateAgentPerformance(calls);
+                updateRecentActivity(calls);
+                updateAnalyticsTable(calls);
+                
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+                showError('Error loading analytics data: ' + error.message);
+            }
+        }
+
+        // Update KPI cards
+        function updateKPIs(calls) {
+            // Total calls
+            document.getElementById('totalCalls').textContent = calls.length;
+            
+            // Success rate
+            const successfulCalls = calls.filter(call => call.call_status === 'ended').length;
+            const successRate = calls.length > 0 ? Math.round((successfulCalls / calls.length) * 100) : 0;
+            document.getElementById('successRate').textContent = successRate + '%';
+            
+            // Average duration
+            const durations = calls.filter(call => call.duration_ms).map(call => call.duration_ms);
+            if (durations.length > 0) {
+                const avgDuration = Math.round(durations.reduce((a, b) => a + b, 0) / durations.length / 1000);
+                document.getElementById('avgDuration').textContent = avgDuration + 's';
+            } else {
+                document.getElementById('avgDuration').textContent = 'N/A';
+            }
+            
+            // Peak hour (simplified)
+            document.getElementById('peakHour').textContent = '2:00 PM';
+        }
+
+        // Create charts
+        function createCharts(calls) {
+            createVolumeChart(calls);
+            createStatusChart(calls);
+            createHourlyChart(calls);
+        }
+
+        // Volume trend chart
+        function createVolumeChart(calls) {
+            const ctx = document.getElementById('volumeChart').getContext('2d');
+            
+            // Group calls by date
+            const callsByDate = {};
+            calls.forEach(call => {
+                const date = new Date(call.created_at).toDateString();
+                callsByDate[date] = (callsByDate[date] || 0) + 1;
+            });
+            
+            const dates = Object.keys(callsByDate).sort();
+            const volumes = dates.map(date => callsByDate[date]);
+            
+            if (volumeChart) {
+                volumeChart.destroy();
+            }
+            
+            volumeChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Call Volume',
+                        data: volumes,
+                        borderColor: '#0070d2',
+                        backgroundColor: 'rgba(0, 112, 210, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#f3f3f3'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: '#f3f3f3'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Status distribution chart
+        function createStatusChart(calls) {
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            
+            const statusCounts = {
+                'ended': calls.filter(call => call.call_status === 'ended').length,
+                'started': calls.filter(call => call.call_status === 'started').length,
+                'failed': calls.filter(call => call.call_status === 'failed').length
+            };
+            
+            if (statusChart) {
+                statusChart.destroy();
+            }
+            
+            statusChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Ended', 'Started', 'Failed'],
+                    datasets: [{
+                        data: [statusCounts.ended, statusCounts.started, statusCounts.failed],
+                        backgroundColor: ['#04844b', '#ffc107', '#c23934'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Hourly distribution chart
+        function createHourlyChart(calls) {
+            const ctx = document.getElementById('hourlyChart').getContext('2d');
+            
+            // Group calls by hour
+            const callsByHour = {};
+            calls.forEach(call => {
+                const hour = new Date(call.created_at).getHours();
+                callsByHour[hour] = (callsByHour[hour] || 0) + 1;
+            });
+            
+            const hours = Array.from({length: 24}, (_, i) => i);
+            const volumes = hours.map(hour => callsByHour[hour] || 0);
+            
+            if (hourlyChart) {
+                hourlyChart.destroy();
+            }
+            
+            hourlyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: hours.map(h => h + ':00'),
+                    datasets: [{
+                        label: 'Calls',
+                        data: volumes,
+                        backgroundColor: '#00a1e0',
+                        borderColor: '#0070d2',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#f3f3f3'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: '#f3f3f3'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update agent performance
+        function updateAgentPerformance(calls) {
+            const agentStats = {};
+            calls.forEach(call => {
+                const agentId = call.agent_id || 'Unknown';
+                if (!agentStats[agentId]) {
+                    agentStats[agentId] = { total: 0, ended: 0, duration: 0 };
+                }
+                agentStats[agentId].total++;
+                if (call.call_status === 'ended') agentStats[agentId].ended++;
+                if (call.duration_ms) agentStats[agentId].duration += call.duration_ms;
+            });
+            
+            let html = '<table class="data-table">';
+            html += '<thead><tr><th>Agent</th><th>Calls</th><th>Success Rate</th><th>Avg Duration</th></tr></thead><tbody>';
+            
+            Object.entries(agentStats).forEach(([agentId, stats]) => {
+                const successRate = Math.round((stats.ended / stats.total) * 100);
+                const avgDuration = Math.round(stats.duration / stats.total / 1000);
+                html += `<tr>
+                    <td>${agentId}</td>
+                    <td>${stats.total}</td>
+                    <td>${successRate}%</td>
+                    <td>${avgDuration}s</td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            document.getElementById('agentPerformance').innerHTML = html;
+        }
+
+        // Update recent activity
+        function updateRecentActivity(calls) {
+            const recentCalls = calls.slice(0, 5);
+            let html = '';
+            
+            recentCalls.forEach(call => {
+                const time = new Date(call.created_at).toLocaleTimeString();
+                const statusClass = call.call_status === 'ended' ? 'status-ended' : 
+                                  call.call_status === 'failed' ? 'status-failed' : 'status-started';
+                html += `<div style="padding: 8px 0; border-bottom: 1px solid #f3f3f3;">
+                    <div style="font-size: 12px; color: #706e6b;">${time}</div>
+                    <div style="font-size: 14px; color: #16325c;">Call ${call.call_id}</div>
+                    <div><span class="status-badge ${statusClass}">${call.call_status}</span></div>
+                </div>`;
+            });
+            
+            document.getElementById('recentActivity').innerHTML = html;
+        }
+
+        // Update analytics table
+        function updateAnalyticsTable(calls) {
+            let html = '<table class="data-table">';
+            html += '<thead><tr><th>Call ID</th><th>Status</th><th>Duration</th><th>Agent</th><th>Timestamp</th></tr></thead><tbody>';
+            
+            calls.forEach(call => {
+                const statusClass = call.call_status === 'ended' ? 'status-ended' : 
+                                  call.call_status === 'failed' ? 'status-failed' : 'status-started';
+                const duration = call.duration_ms ? Math.round(call.duration_ms/1000) + 's' : 'N/A';
+                const time = new Date(call.created_at).toLocaleString();
+                
+                html += `<tr>
+                    <td>${call.call_id}</td>
+                    <td><span class="status-badge ${statusClass}">${call.call_status}</span></td>
+                    <td>${duration}</td>
+                    <td>${call.agent_id || 'N/A'}</td>
+                    <td>${time}</td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            document.getElementById('analyticsTable').innerHTML = html;
+        }
+
+        // Time range selector
+        function setTimeRange(range) {
+            currentTimeRange = range;
+            document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            loadAnalytics();
+        }
+
+        // Export functions
+        function exportReport() {
+            alert('Export functionality will be implemented with PDF generation');
+        }
+
+        function exportData() {
+            alert('Data export functionality will be implemented');
+        }
+
+        function refreshChart(chartType) {
+            loadAnalytics();
+        }
+
+        // Error handling
+        function showError(message) {
+            document.querySelectorAll('.loading').forEach(el => {
+                el.innerHTML = `<div class="error">${message}</div>`;
+            });
+        }
+
+        function showNoData() {
+            document.querySelectorAll('.loading').forEach(el => {
+                el.innerHTML = '<div class="loading">No data available for the selected period</div>';
+            });
+        }
+
+        // Load analytics on page load
+        loadAnalytics();
+    </script>
+</body>
+</html>

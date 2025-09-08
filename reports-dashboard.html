@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics - AgentFlow Pro</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f3f3f3;
+            color: #181818;
+            line-height: 1.4;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Salesforce-style Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #16325c;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+        }
+
+        .sidebar-header {
+            padding: 20px 16px;
+            border-bottom: 1px solid #2e5a8a;
+            background: #0e2a47;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #00a1e0;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 16px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .company-name {
+            font-size: 12px;
+            color: #b0c4de;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-section {
+            padding: 16px 0;
+        }
+
+        .nav-title {
+            font-size: 11px;
+            color: #b0c4de;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 16px 8px;
+            font-weight: 600;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            color: #b0c4de;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: #2e5a8a;
+            color: white;
+        }
+
+        .nav-item.active {
+            background: #2e5a8a;
+            color: white;
+            border-left-color: #00a1e0;
+        }
+
+        .nav-item i {
+            width: 20px;
+            margin-right: 12px;
+            text-align: center;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            background: #f3f3f3;
+        }
+
+        /* Salesforce-style Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid #d8dde6;
+            padding: 0 24px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 300;
+            color: #16325c;
+        }
+
+        .breadcrumb {
+            font-size: 12px;
+            color: #706e6b;
+        }
+
+        .breadcrumb a {
+            color: #0070d2;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid #d8dde6;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #f8f9fa;
+        }
+
+        .btn-primary {
+            background: #0070d2;
+            color: white;
+            border-color: #0070d2;
+        }
+
+        .btn-primary:hover {
+            background: #005fb2;
+        }
+
+        .btn-success {
+            background: #04844b;
+            color: white;
+            border-color: #04844b;
+        }
+
+        .btn-success:hover {
+            background: #036b3a;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 24px;
+        }
+
+        /* Report Templates Grid */
+        .report-templates {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .report-template {
+            background: white;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .report-template:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .report-template.selected {
+            border-color: #0070d2;
+            background: #f8f9fa;
+        }
+
+        .report-icon {
+            width: 48px;
+            height: 48px;
+            background: #f3f3f3;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #00a1e0;
+            margin-bottom: 16px;
+        }
+
+        .report-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #16325c;
+            margin-bottom: 8px;
+        }
+
+        .report-description {
+            font-size: 14px;
+            color: #706e6b;
+            margin-bottom: 16px;
+        }
+
+        .report-features {
+            list-style: none;
+            font-size: 12px;
+            color: #706e6b;
+        }
+
+        .report-features li {
+            margin-bottom: 4px;
+        }
+
+        .report-features li:before {
+            content: "✓ ";
+            color: #04844b;
+            font-weight: bold;
+        }
+
+        /* Report Configuration */
+        .report-config {
+            background: white;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+
+        .config-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #d8dde6;
+            background: #fafaf9;
+        }
+
+        .config-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #16325c;
+            margin: 0;
+        }
+
+        .config-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #16325c;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #0070d2;
+            box-shadow: 0 0 0 2px rgba(0, 112, 210, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin: 0;
+        }
+
+        .checkbox-item label {
+            font-size: 14px;
+            color: #16325c;
+            cursor: pointer;
+        }
+
+        /* Generated Reports */
+        .generated-reports {
+            background: white;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+        }
+
+        .reports-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #d8dde6;
+            background: #fafaf9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .reports-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #16325c;
+            margin: 0;
+        }
+
+        .reports-body {
+            padding: 20px;
+        }
+
+        .report-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            background: #f8f9fa;
+        }
+
+        .report-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .report-icon-small {
+            width: 32px;
+            height: 32px;
+            background: #f3f3f3;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00a1e0;
+        }
+
+        .report-details h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #16325c;
+            margin-bottom: 4px;
+        }
+
+        .report-details p {
+            font-size: 12px;
+            color: #706e6b;
+            margin: 0;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Loading States */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #706e6b;
+            font-size: 14px;
+        }
+
+        .error {
+            background: #fef7f7;
+            color: #c23934;
+            padding: 16px;
+            border-radius: 4px;
+            border: 1px solid #f5c6cb;
+            margin: 16px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .report-templates {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Salesforce-style Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">AF</div>
+                    <div class="logo-text">AgentFlow Pro</div>
+                </div>
+                <div class="company-name">Pete's Company</div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Analytics</div>
+                <a href="/" class="nav-item">
+                    <i>📊</i> Dashboard
+                </a>
+                <a href="analytics-dashboard.html" class="nav-item">
+                    <i>📈</i> Advanced Analytics
+                </a>
+                <a href="#" class="nav-item">
+                    <i>📞</i> Call Logs
+                </a>
+                <a href="#" class="nav-item active">
+                    <i>📋</i> Reports
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Management</div>
+                <a href="#" class="nav-item">
+                    <i>👥</i> Agents
+                </a>
+                <a href="#" class="nav-item">
+                    <i>⚙️</i> Settings
+                </a>
+                <a href="#" class="nav-item">
+                    <i>🔗</i> Integrations
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Salesforce-style Header -->
+            <div class="header">
+                <div class="header-left">
+                    <div>
+                        <div class="breadcrumb">
+                            <a href="/">Home</a> > <a href="#">Analytics</a> > Reports
+                        </div>
+                        <h1 class="page-title">Reports & Analytics</h1>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <a href="/" class="btn">← Back to Dashboard</a>
+                    <button class="btn btn-success" onclick="generateReport()">Generate Report</button>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Report Templates -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Report Templates</h3>
+                        <div class="card-subtitle">Choose a template to generate your report</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="report-templates">
+                            <div class="report-template" onclick="selectTemplate('executive')">
+                                <div class="report-icon">📊</div>
+                                <div class="report-title">Executive Summary</div>
+                                <div class="report-description">High-level overview for executives and stakeholders</div>
+                                <ul class="report-features">
+                                    <li>Key performance indicators</li>
+                                    <li>Trend analysis</li>
+                                    <li>Strategic insights</li>
+                                    <li>PDF export ready</li>
+                                </ul>
+                            </div>
+
+                            <div class="report-template" onclick="selectTemplate('operational')">
+                                <div class="report-icon">⚙️</div>
+                                <div class="report-title">Operational Report</div>
+                                <div class="report-description">Detailed operational metrics for managers</div>
+                                <ul class="report-features">
+                                    <li>Call volume analysis</li>
+                                    <li>Agent performance</li>
+                                    <li>Quality metrics</li>
+                                    <li>Detailed breakdowns</li>
+                                </ul>
+                            </div>
+
+                            <div class="report-template" onclick="selectTemplate('custom')">
+                                <div class="report-icon">🎯</div>
+                                <div class="report-title">Custom Report</div>
+                                <div class="report-description">Fully customizable report with your selected metrics</div>
+                                <ul class="report-features">
+                                    <li>Custom date ranges</li>
+                                    <li>Selective metrics</li>
+                                    <li>Custom branding</li>
+                                    <li>Multiple formats</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report Configuration -->
+                <div class="report-config" id="reportConfig" style="display: none;">
+                    <div class="config-header">
+                        <h3 class="config-title">Report Configuration</h3>
+                    </div>
+                    <div class="config-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Report Name</label>
+                                <input type="text" class="form-control" id="reportName" placeholder="Enter report name">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Date Range</label>
+                                <select class="form-control" id="dateRange">
+                                    <option value="7d">Last 7 Days</option>
+                                    <option value="30d">Last 30 Days</option>
+                                    <option value="90d">Last 90 Days</option>
+                                    <option value="1y">Last Year</option>
+                                    <option value="custom">Custom Range</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Include Metrics</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="totalCalls" checked>
+                                    <label for="totalCalls">Total Calls</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="successRate" checked>
+                                    <label for="successRate">Success Rate</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="avgDuration" checked>
+                                    <label for="avgDuration">Average Duration</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="agentPerformance" checked>
+                                    <label for="agentPerformance">Agent Performance</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="callTrends" checked>
+                                    <label for="callTrends">Call Trends</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="hourlyDistribution" checked>
+                                    <label for="hourlyDistribution">Hourly Distribution</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Export Format</label>
+                            <select class="form-control" id="exportFormat">
+                                <option value="pdf">PDF Document</option>
+                                <option value="excel">Excel Spreadsheet</option>
+                                <option value="csv">CSV Data</option>
+                            </select>
+                        </div>
+
+                        <div style="display: flex; gap: 12px; margin-top: 24px;">
+                            <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
+                            <button class="btn" onclick="cancelReport()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Generated Reports -->
+                <div class="generated-reports">
+                    <div class="reports-header">
+                        <h3 class="reports-title">Generated Reports</h3>
+                        <button class="btn" onclick="refreshReports()">Refresh</button>
+                    </div>
+                    <div class="reports-body">
+                        <div id="reportsList">
+                            <div class="loading">Loading reports...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedTemplate = null;
+
+        // Select report template
+        function selectTemplate(template) {
+            selectedTemplate = template;
+            
+            // Remove previous selections
+            document.querySelectorAll('.report-template').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Add selection to clicked template
+            event.currentTarget.classList.add('selected');
+            
+            // Show configuration panel
+            document.getElementById('reportConfig').style.display = 'block';
+            
+            // Set default report name
+            const reportName = document.getElementById('reportName');
+            if (template === 'executive') {
+                reportName.value = 'Executive Summary Report';
+            } else if (template === 'operational') {
+                reportName.value = 'Operational Report';
+            } else if (template === 'custom') {
+                reportName.value = 'Custom Report';
+            }
+        }
+
+        // Generate report
+        async function generateReport() {
+            if (!selectedTemplate) {
+                alert('Please select a report template first');
+                return;
+            }
+
+            const reportName = document.getElementById('reportName').value;
+            const dateRange = document.getElementById('dateRange').value;
+            const exportFormat = document.getElementById('exportFormat').value;
+
+            if (!reportName) {
+                alert('Please enter a report name');
+                return;
+            }
+
+            // Show loading
+            const reportsList = document.getElementById('reportsList');
+            reportsList.innerHTML = '<div class="loading">Generating report...</div>';
+
+            try {
+                // Simulate report generation
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                // Add new report to list
+                addReportToList({
+                    name: reportName,
+                    template: selectedTemplate,
+                    dateRange: dateRange,
+                    format: exportFormat,
+                    generatedAt: new Date().toISOString(),
+                    status: 'completed'
+                });
+
+                // Hide configuration panel
+                document.getElementById('reportConfig').style.display = 'none';
+                selectedTemplate = null;
+
+                alert('Report generated successfully!');
+
+            } catch (error) {
+                reportsList.innerHTML = '<div class="error">Error generating report: ' + error.message + '</div>';
+            }
+        }
+
+        // Add report to list
+        function addReportToList(report) {
+            const reportsList = document.getElementById('reportsList');
+            
+            if (reportsList.innerHTML.includes('Loading reports...') || reportsList.innerHTML.includes('No reports found')) {
+                reportsList.innerHTML = '';
+            }
+
+            const reportItem = document.createElement('div');
+            reportItem.className = 'report-item';
+            reportItem.innerHTML = `
+                <div class="report-info">
+                    <div class="report-icon-small">📋</div>
+                    <div class="report-details">
+                        <h4>${report.name}</h4>
+                        <p>Generated ${new Date(report.generatedAt).toLocaleString()} • ${report.template} • ${report.format.toUpperCase()}</p>
+                    </div>
+                </div>
+                <div class="report-actions">
+                    <button class="btn btn-primary btn-small" onclick="downloadReport('${report.name}')">Download</button>
+                    <button class="btn btn-small" onclick="viewReport('${report.name}')">View</button>
+                    <button class="btn btn-small" onclick="deleteReport(this)">Delete</button>
+                </div>
+            `;
+
+            reportsList.appendChild(reportItem);
+        }
+
+        // Download report
+        function downloadReport(reportName) {
+            // Simulate PDF generation
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFontSize(20);
+            doc.text('AgentFlow Pro Report', 20, 30);
+            
+            doc.setFontSize(16);
+            doc.text(reportName, 20, 50);
+            
+            doc.setFontSize(12);
+            doc.text('Generated: ' + new Date().toLocaleString(), 20, 70);
+            doc.text('Company: Pete\'s Company', 20, 80);
+            
+            // Add some sample data
+            doc.text('Call Analytics Summary:', 20, 100);
+            doc.text('• Total Calls: 10', 30, 115);
+            doc.text('• Success Rate: 90%', 30, 125);
+            doc.text('• Average Duration: 120s', 30, 135);
+            
+            doc.save(reportName + '.pdf');
+        }
+
+        // View report
+        function viewReport(reportName) {
+            alert('Report viewer will open in a new window for: ' + reportName);
+        }
+
+        // Delete report
+        function deleteReport(button) {
+            if (confirm('Are you sure you want to delete this report?')) {
+                button.closest('.report-item').remove();
+            }
+        }
+
+        // Cancel report generation
+        function cancelReport() {
+            document.getElementById('reportConfig').style.display = 'none';
+            selectedTemplate = null;
+            document.querySelectorAll('.report-template').forEach(el => {
+                el.classList.remove('selected');
+            });
+        }
+
+        // Refresh reports
+        function refreshReports() {
+            loadReports();
+        }
+
+        // Load existing reports
+        function loadReports() {
+            const reportsList = document.getElementById('reportsList');
+            
+            // Sample reports
+            const sampleReports = [
+                {
+                    name: 'Weekly Executive Summary',
+                    template: 'executive',
+                    dateRange: '7d',
+                    format: 'pdf',
+                    generatedAt: new Date(Date.now() - 86400000).toISOString(),
+                    status: 'completed'
+                },
+                {
+                    name: 'Monthly Operational Report',
+                    template: 'operational',
+                    dateRange: '30d',
+                    format: 'excel',
+                    generatedAt: new Date(Date.now() - 172800000).toISOString(),
+                    status: 'completed'
+                }
+            ];
+
+            if (sampleReports.length === 0) {
+                reportsList.innerHTML = '<div class="loading">No reports found</div>';
+                return;
+            }
+
+            reportsList.innerHTML = '';
+            sampleReports.forEach(report => {
+                addReportToList(report);
+            });
+        }
+
+        // Load reports on page load
+        loadReports();
+    </script>
+</body>
+</html>
