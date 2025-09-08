@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retell AI Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -167,6 +166,15 @@
             border-left: 4px solid #d32f2f;
         }
         
+        .success {
+            color: #2e7d32;
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #2e7d32;
+        }
+        
         .webhook-info {
             background: #e3f2fd;
             padding: 20px;
@@ -221,27 +229,21 @@
     </div>
 
     <script>
-        // Initialize Supabase
-        const supabaseUrl = 'https://vvwlzivlierngzlpprvo.supabase.co';
-        const supabaseKey = 'sb_secret_AwVwW_9vNv0H7j0NShV9Dg_Y-mQhreg';
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
         // Set webhook URL
         document.getElementById('webhookUrl').textContent = window.location.origin + '/.netlify/functions/webhook-handler';
 
         // Function to load and display calls
         async function loadCalls() {
             try {
-                document.getElementById('calls').innerHTML = '<div class="loading">Loading calls from Supabase...</div>';
+                document.getElementById('calls').innerHTML = '<div class="loading">Loading calls from API...</div>';
                 
-                const { data: calls, error } = await supabase
-                    .from('calls')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-
-                if (error) {
-                    throw new Error('Supabase error: ' + error.message);
+                const response = await fetch('/.netlify/functions/api-calls');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
+                
+                const calls = await response.json();
 
                 console.log('Loaded calls:', calls.length);
                 
@@ -286,6 +288,12 @@
                                     <div class="transcript">
                                         <strong>Transcript:</strong><br>
                                         ${call.transcript.substring(0, 200)}${call.transcript.length > 200 ? '...' : ''}
+                                    </div>
+                                ` : ''}
+                                ${call.call_analysis ? `
+                                    <div class="transcript">
+                                        <strong>Analysis:</strong><br>
+                                        ${JSON.parse(call.call_analysis).summary || 'No summary available'}
                                     </div>
                                 ` : ''}
                             </div>
