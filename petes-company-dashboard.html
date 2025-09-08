@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pete's Company Dashboard - AgentFlow Pro</title>
+    <title>Pete's Company - Call Center Analytics Dashboard</title>
     <style>
         * {
             margin: 0;
@@ -12,113 +12,323 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .dashboard-container {
+            display: flex;
             min-height: 100vh;
-            color: #ffffff;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: #2c3e50;
+            color: white;
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
 
-        .header {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid #34495e;
+            background: #34495e;
         }
 
-        .company-info {
+        .company-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+
+        .company-subtitle {
+            font-size: 0.85rem;
+            color: #bdc3c7;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-nav {
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 15px 25px;
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: #34495e;
+            border-left-color: #3498db;
+            color: #3498db;
+        }
+
+        .nav-item i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 0;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: white;
+            padding: 15px 30px;
+            border-bottom: 1px solid #e9ecef;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        .company-name {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .status-badge {
-            background: rgba(46, 213, 115, 0.2);
-            color: #2ed573;
-            padding: 8px 16px;
-            border-radius: 20px;
+        .page-title {
+            font-size: 1.8rem;
             font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .top-bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            width: 300px;
             font-size: 0.9rem;
         }
 
-        .webhook-info {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 20px;
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
         }
 
-        .webhook-url {
-            font-family: 'Courier New', monospace;
-            background: rgba(102, 126, 234, 0.1);
-            padding: 10px;
-            border-radius: 8px;
-            word-break: break-all;
-            margin: 10px 0;
-            color: #667eea;
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            cursor: pointer;
         }
 
-        .stats-grid {
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            background: #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 30px;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 25px;
             margin-bottom: 30px;
         }
 
-        .stat-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
+        .kpi-card {
+            background: white;
             padding: 25px;
-            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+            position: relative;
+            overflow: hidden;
         }
 
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 10px;
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2980b9);
         }
 
-        .stat-label {
-            color: rgba(255, 255, 255, 0.7);
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .kpi-title {
             font-size: 0.9rem;
+            color: #7f8c8d;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            font-weight: 600;
         }
 
-        .calls-section {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px;
+        .kpi-icon {
+            width: 40px;
+            height: 40px;
+            background: #ecf0f1;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3498db;
+            font-size: 1.2rem;
+        }
+
+        .kpi-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .kpi-change {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .kpi-change.positive {
+            color: #27ae60;
+        }
+
+        .kpi-change.negative {
+            color: #e74c3c;
+        }
+
+        .kpi-change i {
+            margin-right: 5px;
+        }
+
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
             margin-bottom: 30px;
         }
 
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
+        .chart-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
-            color: #ffffff;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .chart-subtitle {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #f8f9fa;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        /* Calls Table */
+        .calls-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+            overflow: hidden;
+        }
+
+        .calls-header {
+            padding: 25px;
+            border-bottom: 1px solid #e9ecef;
+            background: #f8f9fa;
+        }
+
+        .calls-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .calls-subtitle {
+            color: #7f8c8d;
+            font-size: 0.9rem;
         }
 
         .calls-table {
@@ -127,148 +337,283 @@
         }
 
         .calls-table th {
+            background: #f8f9fa;
+            padding: 15px 20px;
             text-align: left;
-            padding: 15px;
-            color: rgba(255, 255, 255, 0.7);
             font-weight: 600;
-            font-size: 0.9rem;
+            color: #2c3e50;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid #e9ecef;
         }
 
         .calls-table td {
-            padding: 20px 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-bottom: 1px solid #f1f2f6;
+            color: #2c3e50;
         }
 
         .calls-table tr:hover {
-            background: rgba(255, 255, 255, 0.03);
+            background: #f8f9fa;
         }
 
         .status-badge {
             display: inline-block;
             padding: 6px 12px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .status-ended {
-            background: rgba(46, 213, 115, 0.2);
-            color: #2ed573;
+            background: #d4edda;
+            color: #155724;
         }
 
         .status-started {
-            background: rgba(255, 193, 7, 0.2);
-            color: #ffc107;
+            background: #fff3cd;
+            color: #856404;
         }
 
         .status-failed {
-            background: rgba(255, 71, 87, 0.2);
-            color: #ff4757;
+            background: #f8d7da;
+            color: #721c24;
         }
 
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
+        .phone-number {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .duration {
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
+            color: #2c3e50;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .view-details-btn {
+            background: #3498db;
             color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
+        .view-details-btn:hover {
+            background: #2980b9;
         }
 
+        /* Loading States */
         .loading {
             text-align: center;
             padding: 40px;
-            color: #667eea;
+            color: #7f8c8d;
         }
 
         .error {
-            background: rgba(255, 71, 87, 0.1);
-            color: #ff4757;
+            background: #f8d7da;
+            color: #721c24;
             padding: 20px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 71, 87, 0.2);
+            border-radius: 6px;
+            border: 1px solid #f5c6cb;
+            margin: 20px 0;
         }
 
-        .refresh-btn {
-            background: rgba(102, 126, 234, 0.1);
-            border: 1px solid #667eea;
-            color: #667eea;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            margin-left: 10px;
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .refresh-btn:hover {
-            background: rgba(102, 126, 234, 0.2);
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Chart Placeholder */
+        .chart-placeholder {
+            height: 300px;
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .chart-placeholder i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="company-info">
-                <h1 class="company-name">Pete's Company</h1>
-                <span class="status-badge">🟢 Active</span>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="company-logo">Pete's Company</div>
+                <div class="company-subtitle">Call Center Analytics</div>
             </div>
-            <div class="webhook-info">
-                <h3>🔗 Webhook Configuration</h3>
-                <p>Your Retell AI webhook is configured and working:</p>
-                <div class="webhook-url" id="webhookUrl">
-                    https://aicalldata.netlify.app/.netlify/functions/webhook-handler
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active">
+                    <i>📊</i> Dashboard
+                </a>
+                <a href="#" class="nav-item">
+                    <i>📞</i> Call Logs
+                </a>
+                <a href="#" class="nav-item">
+                    <i>👥</i> Agents
+                </a>
+                <a href="#" class="nav-item">
+                    <i>📈</i> Reports
+                </a>
+                <a href="#" class="nav-item">
+                    <i>⚙️</i> Settings
+                </a>
+                <a href="#" class="nav-item">
+                    <i>🔗</i> Webhooks
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <h1 class="page-title">Call Center Analytics Dashboard</h1>
+                <div class="top-bar-actions">
+                    <div class="search-box">
+                        <i>🔍</i>
+                        <input type="text" placeholder="Search calls, agents, or customers...">
+                    </div>
+                    <div class="user-menu">
+                        <div class="user-avatar">PC</div>
+                        <span>Pete Cross</span>
+                        <i>▼</i>
+                    </div>
                 </div>
-                <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; margin-top: 10px;">
-                    This webhook is already configured in your Retell AI dashboard and is actively receiving call data.
-                </p>
             </div>
-        </div>
 
-        <!-- Stats Grid -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value" id="totalCalls">-</div>
-                <div class="stat-label">Total Calls</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="successRate">-</div>
-                <div class="stat-label">Success Rate</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="avgDuration">-</div>
-                <div class="stat-label">Avg Duration</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="lastCall">-</div>
-                <div class="stat-label">Last Call</div>
-            </div>
-        </div>
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- KPI Cards -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-title">Total Calls</div>
+                            <div class="kpi-icon">📞</div>
+                        </div>
+                        <div class="kpi-value" id="totalCalls">-</div>
+                        <div class="kpi-change positive">
+                            <i>↗</i> +12% vs last week
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-title">Success Rate</div>
+                            <div class="kpi-icon">✅</div>
+                        </div>
+                        <div class="kpi-value" id="successRate">-</div>
+                        <div class="kpi-change positive">
+                            <i>↗</i> +2.3% vs last week
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-title">Avg Duration</div>
+                            <div class="kpi-icon">⏱️</div>
+                        </div>
+                        <div class="kpi-value" id="avgDuration">-</div>
+                        <div class="kpi-change negative">
+                            <i>↘</i> -5.2% vs last week
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-title">Active Agents</div>
+                            <div class="kpi-icon">👥</div>
+                        </div>
+                        <div class="kpi-value">1</div>
+                        <div class="kpi-change positive">
+                            <i>↗</i> AI Agent Active
+                        </div>
+                    </div>
+                </div>
 
-        <!-- Recent Calls -->
-        <div class="calls-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 class="section-title">Recent Calls</h2>
-                <button class="refresh-btn" onclick="loadCalls()">🔄 Refresh</button>
-            </div>
-            <div id="callsContent">
-                <div class="loading">Loading calls...</div>
+                <!-- Charts Section -->
+                <div class="charts-section">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title">Call Volume Trends</div>
+                                <div class="chart-subtitle">Daily call volume over the last 7 days</div>
+                            </div>
+                            <div class="chart-actions">
+                                <button class="btn">7D</button>
+                                <button class="btn btn-primary">30D</button>
+                                <button class="btn">90D</button>
+                            </div>
+                        </div>
+                        <div class="chart-placeholder">
+                            <div>
+                                <i>📈</i>
+                                <div>Call Volume Chart</div>
+                                <div style="font-size: 0.8rem; margin-top: 5px;">Chart visualization will be implemented</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title">Call Status Distribution</div>
+                                <div class="chart-subtitle">Breakdown by call outcome</div>
+                            </div>
+                        </div>
+                        <div class="chart-placeholder">
+                            <div>
+                                <i>🥧</i>
+                                <div>Status Distribution</div>
+                                <div style="font-size: 0.8rem; margin-top: 5px;">Pie chart will be implemented</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calls Table -->
+                <div class="calls-section">
+                    <div class="calls-header">
+                        <div class="calls-title">Recent Call Activity</div>
+                        <div class="calls-subtitle">Real-time call data from your Retell AI agent</div>
+                    </div>
+                    <div id="callsContent">
+                        <div class="loading">Loading call data...</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -277,7 +622,7 @@
         // Load calls from our existing API
         async function loadCalls() {
             try {
-                document.getElementById('callsContent').innerHTML = '<div class="loading">Loading calls...</div>';
+                document.getElementById('callsContent').innerHTML = '<div class="loading">Loading call data...</div>';
                 
                 const response = await fetch('/.netlify/functions/api-calls');
                 if (!response.ok) {
@@ -303,7 +648,7 @@
                                 <th>Duration</th>
                                 <th>Status</th>
                                 <th>Agent</th>
-                                <th>Time</th>
+                                <th>Timestamp</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -319,15 +664,15 @@
                     
                     callsHTML += `
                         <tr>
-                            <td>${call.call_id || 'N/A'}</td>
-                            <td>${call.from_number || 'N/A'}</td>
-                            <td>${call.to_number || 'N/A'}</td>
-                            <td>${duration}</td>
+                            <td><strong>${call.call_id || 'N/A'}</strong></td>
+                            <td><span class="phone-number">${call.from_number || 'N/A'}</span></td>
+                            <td><span class="phone-number">${call.to_number || 'N/A'}</span></td>
+                            <td><span class="duration">${duration}</span></td>
                             <td><span class="status-badge ${statusClass}">${call.call_status || 'Unknown'}</span></td>
                             <td>${call.agent_id || 'N/A'}</td>
                             <td>${time}</td>
                             <td>
-                                <button class="btn btn-primary" onclick="viewCallDetails('${call.call_id}')">
+                                <button class="view-details-btn" onclick="viewCallDetails('${call.call_id}')">
                                     View Details
                                 </button>
                             </td>
@@ -368,15 +713,6 @@
                 document.getElementById('avgDuration').textContent = avgDuration + 's';
             } else {
                 document.getElementById('avgDuration').textContent = 'N/A';
-            }
-            
-            // Last call time
-            if (calls.length > 0) {
-                const lastCall = calls[0]; // Assuming calls are sorted by created_at desc
-                const lastCallTime = lastCall.created_at ? new Date(lastCall.created_at).toLocaleString() : 'N/A';
-                document.getElementById('lastCall').textContent = lastCallTime;
-            } else {
-                document.getElementById('lastCall').textContent = 'No calls';
             }
         }
 
